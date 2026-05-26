@@ -1,0 +1,38 @@
+import http, {
+  getToken,
+  setToken,
+  setRefreshToken,
+  clearSession,
+  attemptRefresh,
+} from "./http";
+import type { Login } from "@/schemas/User";
+
+export interface AuthResponse {
+  accessToken: string;
+  refreshToken: string;
+  tokenType: "bearer";
+}
+
+export async function login(credentials: Login): Promise<AuthResponse> {
+  const { data } = await http.post<AuthResponse>(
+    "/v1.0/auth/login",
+    credentials,
+  );
+  setToken(data.accessToken);
+  setRefreshToken(data.refreshToken);
+  return data;
+}
+
+export async function logout(): Promise<void> {
+  try {
+    if (getToken()) {
+      await http.post("/v1.0/auth/logout");
+    }
+  } catch {
+    // Erreur réseau ou token invalide : on déconnecte quand même côté client
+  } finally {
+    clearSession();
+  }
+}
+
+export { attemptRefresh as refreshToken };

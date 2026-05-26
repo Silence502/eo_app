@@ -1,0 +1,33 @@
+{
+	"common": {
+		"loading": "Chargement...",
+		"save": "Enregistrer",
+		"cancel": "Annuler",
+		"delete": "Supprimer",
+		"edit": "Modifier",
+		"confirm": "Confirmer",
+		"back": "Retour",
+		"yes": "Oui",
+		"no": "Non"
+	},
+	"auth": {
+		"login": "Se connecter",
+		"logout": "Se déconnecter",
+		"email": "Adresse e-mail",
+		"password": "Mot de passe",
+		"loginTitle": "Connexion",
+		"loginSubtitle": "Bienvenue, veuillez vous connecter.",
+		"forgotPassword": "Mot de passe oublié ?",
+		"invalidCredentials": "Identifiants invalides.",
+		"register": "S'inscrire"
+	},
+	"dashboard": {
+		"title": "Tableau de bord"
+	},
+	"validation": {
+		"required": "Ce champ est obligatoire.",
+		"emailInvalid": "Adresse e-mail invalide.",
+		"passwordMin": "Le mot de passe doit contenir au moins 8 caractères.",
+		"stringMin": "Ce champ doit contenir au moins {min} caractère(s)."
+	}
+}
