@@ -32,8 +32,13 @@ const props = defineProps<{
 			<Message v-if="$field.invalid" severity="error" size="small" variant="simple">
 				{{ t($field.error?.message ?? '') }}
 			</Message>
-			<div v-if="info" class="flex items-center justify-end">
-				<Button class="!p-0 !m-0 !text-sm" :label="t('auth.forgotPassword')" variant="link" />
+			<div v-if="info" class="flex items-center justify-start"
+				:class="{ 'flex-row-reverse': direction === 'right' }">
+				<Button :pt="{
+					root: {
+						style: 'font-size: var(--text-sm) /* 0.875rem = 14px */ !important; padding: 0 !important; margin: 0 !important;',
+					}
+				}" :label="t('auth.forgotPassword')" variant="link" />
 			</div>
 		</div>
 	</FormField>

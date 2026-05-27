@@ -1,2 +1,18 @@
 @import "tailwindcss";
 @import "./base/_base.css";
+
+@layer base {
+	@apply box-border;
+}
+
+label {
+	@apply text-sm font-medium text-gray-700 dark:text-gray-300;
+}
+
+.login-card {
+	@apply flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900;
+
+	.login-card-content {
+		@apply w-full max-w-md p-8 bg-white dark:bg-gray-800 rounded-2xl shadow-lg;
+	}
+}

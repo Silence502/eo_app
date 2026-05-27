@@ -38,8 +38,8 @@ function onSubmit(event: FormSubmitEvent) {
 </script>
 
 <template>
-	<div class="flex items-center justify-center min-h-screen bg-surface-100 dark:bg-surface-900">
-		<div class="w-full max-w-md p-8 bg-surface-0 dark:bg-surface-800 rounded-2xl shadow-lg">
+	<div class="login-card">
+		<div class="login-card-content">
 			<h2 class="text-2xl font-bold text-center mb-6 text-surface-900 dark:text-surface-0">
 				{{ t('auth.loginTitle') }}
 			</h2>
@@ -50,7 +50,7 @@ function onSubmit(event: FormSubmitEvent) {
 
 				<!-- Mot de passe -->
 				<FieldBlock id="password" name="password" label="Mot de passe" type="password" placeholder="••••••••"
-					info />
+					info direction="right" />
 
 				<Message v-if="errorMessage" severity="error" class="w-full">
 					{{ errorMessage }}
@@ -63,9 +63,11 @@ function onSubmit(event: FormSubmitEvent) {
 
 				<Divider />
 
-				<Button severity="secondary">
-					<router-link to="/register" class="w-full h-full">{{ t('auth.register') }}</router-link>
-				</Button>
+				<div class="text-center text-sm text-gray-600 dark:text-gray-400">
+					Vous n'avez pas de compte ?
+					<router-link to="/register" class="text-primary-600 font-bold hover:underline">{{
+						t('auth.register') }}</router-link>
+				</div>
 
 			</Form>
 		</div>
