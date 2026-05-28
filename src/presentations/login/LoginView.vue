@@ -4,6 +4,7 @@ import { useRouter } from "vue-router";
 import LoginComponent from "./LoginComponent.vue";
 import { login } from "@/api/auth";
 import type { Login } from "@/schemas/User";
+import { Routes } from "@/router/routes";
 import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
 
@@ -16,7 +17,7 @@ async function handleLogin(values: Login) {
 	errorMessage.value = null;
 	try {
 		await login(values);
-		router.push("/dashboard");
+		router.push(Routes.Dashboard);
 	} catch {
 		errorMessage.value = t("auth.invalidCredentials");
 	} finally {

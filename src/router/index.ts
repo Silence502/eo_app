@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import { getToken } from "@/api/http";
-
-const PUBLIC_ROUTES = ["/", "/login"];
+import { PUBLIC_ROUTES } from "@/router/routes";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -35,7 +34,7 @@ const router = createRouter({
 
 router.beforeEach(to => {
   const isAuthenticated = !!getToken();
-  if (!PUBLIC_ROUTES.includes(to.path) && !isAuthenticated) {
+  if (!(PUBLIC_ROUTES as string[]).includes(to.path) && !isAuthenticated) {
     return { name: "home" };
   }
 });

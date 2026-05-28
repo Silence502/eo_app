@@ -5,8 +5,23 @@
 	@apply box-border;
 }
 
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
 label {
-	@apply text-sm font-medium text-gray-700 dark:text-gray-300;
+	@apply text-gray-700 dark:text-gray-300;
+}
+
+label {
+	@apply text-sm font-medium;
+}
+
+h2 {
+	@apply text-2xl font-bold text-center;
 }
 
 .login-card {

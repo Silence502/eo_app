@@ -7,6 +7,7 @@ import Message from "primevue/message";
 import { LoginSchema, type Login } from "../../schemas/User";
 import FieldBlock from "@/components/blocks/FieldBlock.vue";
 import Divider from 'primevue/divider';
+import { Routes } from "@/router/routes";
 
 import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
@@ -40,7 +41,7 @@ function onSubmit(event: FormSubmitEvent) {
 <template>
 	<div class="login-card">
 		<div class="login-card-content">
-			<h2 class="text-2xl font-bold text-center mb-6 text-surface-900 dark:text-surface-0">
+			<h2 class="mb-6">
 				{{ t('auth.loginTitle') }}
 			</h2>
 
@@ -65,7 +66,7 @@ function onSubmit(event: FormSubmitEvent) {
 
 				<div class="text-center text-sm text-gray-600 dark:text-gray-400">
 					Vous n'avez pas de compte ?
-					<router-link to="/register" class="text-primary-600 font-bold hover:underline">{{
+					<router-link :to="Routes.Register" class="font-bold hover:underline">{{
 						t('auth.register') }}</router-link>
 				</div>
 
