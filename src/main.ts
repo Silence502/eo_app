@@ -13,6 +13,20 @@ const app = createApp(App);
 app.use(createPinia());
 app.use(router);
 app.use(i18n);
-app.use(PrimeVue, { ripple: true, theme: { preset: Aura } });
+app.use(PrimeVue, {
+  ripple: true,
+  theme: {
+    preset: Aura,
+    options: {
+      darkModeSelector: ".eo-dark",
+    },
+  },
+});
+
+// Restore saved theme preference
+const savedTheme = localStorage.getItem("theme");
+if (savedTheme === "dark") {
+  document.documentElement.classList.add("eo-dark");
+}
 
 app.mount("#app");

@@ -1,5 +1,8 @@
 @import "tailwindcss";
+@import "tailwindcss-primeui";
 @import "./base/_base.css";
+
+@custom-variant dark (&:where(.eo-dark, .eo-dark *));
 
 
 @layer base {
@@ -35,7 +38,7 @@ h2 {
 }
 
 .login-card {
-	@apply flex items-center justify-center min-h-[95vh] px-2 lg:px-0;
+	@apply flex items-center justify-center min-h-[95vh] px-2 lg:px-0 flex-col;
 
 	.login-card-content {
 		@apply w-full max-w-md p-8 bg-white dark:bg-gray-800 rounded-2xl shadow-lg;
