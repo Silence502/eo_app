@@ -20,6 +20,7 @@
     "@tabler/icons-vue": "^3.44.0",
     "@tailwindcss/vite": "^4.3.0",
     "axios": "^1.16.1",
+    "flag-icons": "^7.5.0",
     "pinia": "^3.0.4",
     "primevue": "^4.5.5",
     "tailwindcss": "^4.3.0",

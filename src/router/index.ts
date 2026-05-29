@@ -9,21 +9,37 @@ const router = createRouter({
       path: "/",
       name: "home",
       component: () => import("../presentations/login/LoginView.vue"),
+      meta: {
+        requiresAuth: false,
+        layout: "AuthLayout",
+      },
     },
     {
       path: "/dashboard",
       name: "dashboard",
       component: () => import("../presentations/dashboard/DashboardView.vue"),
+      meta: {
+        requiresAuth: true,
+        layout: "DefaultLayout",
+      },
     },
     {
       path: "/login",
       name: "login",
       component: () => import("../presentations/login/LoginView.vue"),
+      meta: {
+        requiresAuth: false,
+        layout: "AuthLayout",
+      },
     },
     {
       path: "/register",
       name: "register",
       component: () => import("../presentations/register/RegisterView.vue"),
+      meta: {
+        requiresAuth: false,
+        layout: "AuthLayout",
+      },
     },
     {
       path: "/:pathMatch(.*)*",

@@ -4,9 +4,11 @@ import fr from "@/locales/fr.json";
 
 export type MessageSchema = typeof en;
 
+const savedLocale = (localStorage.getItem("locale") as "en" | "fr") ?? "fr";
+
 const i18n = createI18n<[MessageSchema], "en" | "fr">({
   legacy: false,
-  locale: "fr",
+  locale: savedLocale,
   fallbackLocale: "en",
   messages: {
     en,

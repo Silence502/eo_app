@@ -19,7 +19,8 @@
 		"loginSubtitle": "Bienvenue, veuillez vous connecter.",
 		"forgotPassword": "Mot de passe oublié ?",
 		"invalidCredentials": "Identifiants invalides.",
-		"register": "S'inscrire"
+		"register": "S'inscrire",
+		"noAccount": "Vous n'avez pas de compte ?"
 	},
 	"dashboard": {
 		"title": "Tableau de bord"

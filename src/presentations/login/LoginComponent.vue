@@ -8,6 +8,7 @@ import { LoginSchema, type Login } from "../../schemas/User";
 import FieldBlock from "@/components/blocks/FieldBlock.vue";
 import Divider from 'primevue/divider';
 import { Routes } from "@/router/routes";
+import LanguageSwitcher from "@/components/blocks/LanguageSwitcher.vue";
 
 import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
@@ -39,6 +40,11 @@ function onSubmit(event: FormSubmitEvent) {
 </script>
 
 <template>
+	<Teleport to="#auth-layout-header">
+		<div class="w-full h-full flex items-center justify-end px-4">
+			<LanguageSwitcher />
+		</div>
+	</Teleport>
 	<div class="login-card">
 		<div class="login-card-content">
 			<h2 class="mb-6">
@@ -65,7 +71,7 @@ function onSubmit(event: FormSubmitEvent) {
 				<Divider />
 
 				<div class="text-center text-sm text-gray-600 dark:text-gray-400">
-					Vous n'avez pas de compte ?
+					{{ t('auth.noAccount') }}
 					<router-link :to="Routes.Register" class="font-bold hover:underline">{{
 						t('auth.register') }}</router-link>
 				</div>

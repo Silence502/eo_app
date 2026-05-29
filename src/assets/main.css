@@ -1,8 +1,14 @@
 @import "tailwindcss";
 @import "./base/_base.css";
 
+
 @layer base {
 	@apply box-border;
+}
+
+html,
+body {
+	@apply min-h-screen bg-gray-100 dark:bg-gray-900;
 }
 
 h1,
@@ -24,8 +30,12 @@ h2 {
 	@apply text-2xl font-bold text-center;
 }
 
+.auth-layout-header {
+	@apply h-[5vh] bg-white dark:bg-gray-800;
+}
+
 .login-card {
-	@apply flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900;
+	@apply flex items-center justify-center min-h-[95vh] px-2 lg:px-0;
 
 	.login-card-content {
 		@apply w-full max-w-md p-8 bg-white dark:bg-gray-800 rounded-2xl shadow-lg;

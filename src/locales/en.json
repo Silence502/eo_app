@@ -19,7 +19,8 @@
 		"loginSubtitle": "Welcome back, please sign in.",
 		"forgotPassword": "Forgot password?",
 		"invalidCredentials": "Invalid credentials.",
-		"register": "Register"
+		"register": "Register",
+		"noAccount": "Don't have an account?"
 	},
 	"dashboard": {
 		"title": "Dashboard"
