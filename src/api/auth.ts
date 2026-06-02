@@ -5,7 +5,7 @@ import http, {
   clearSession,
   attemptRefresh,
 } from "./http";
-import type { Login } from "@/schemas/User";
+import type { Login, Register } from "@/schemas/User";
 
 export interface AuthResponse {
   accessToken: string;
@@ -33,6 +33,15 @@ export async function logout(): Promise<void> {
   } finally {
     clearSession();
   }
+}
+
+export async function register(
+  values: Omit<Register, "confirmPassword">,
+): Promise<AuthResponse> {
+  const { data } = await http.post<AuthResponse>("/v1.0/auth/register", values);
+  setToken(data.accessToken);
+  setRefreshToken(data.refreshToken);
+  return data;
 }
 
 export { attemptRefresh as refreshToken };

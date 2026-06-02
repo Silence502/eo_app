@@ -13,9 +13,11 @@ const props = defineProps<{
 	name: string;
 	label: string;
 	type?: string;
+	textType?: "text" | "link";
 	placeholder?: string;
 	info?: boolean;
-	direction?: "right" | "left";
+	infoText?: string;
+	infoDirection?: "right" | "left";
 }>();
 </script>
 
@@ -33,12 +35,16 @@ const props = defineProps<{
 				{{ t($field.error?.message ?? '') }}
 			</Message>
 			<div v-if="info" class="flex items-center justify-start"
-				:class="{ 'flex-row-reverse': direction === 'right' }">
-				<Button :pt="{
+				:class="{ 'flex-row-reverse': infoDirection === 'right' }">
+				<Button v-if="textType === 'link'" :pt="{
 					root: {
 						style: 'font-size: var(--text-sm) /* 0.875rem = 14px */ !important; padding: 0 !important; margin: 0 !important;',
 					}
-				}" :label="t('auth.forgotPassword')" variant="link" />
+				}" :label="infoText" variant="link" />
+				<div v-else class="text-sm text-gray-400 flex items-center justify-start"
+					:class="{ 'flex-row-reverse': infoDirection === 'right' }">
+					{{ infoText }}
+				</div>
 			</div>
 		</div>
 	</FormField>

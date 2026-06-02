@@ -1,20 +1,14 @@
 <script setup lang="ts">
 import { Form } from "@primevue/forms";
-import type { FormSubmitEvent } from "@primevue/forms";
-import { zodResolver } from "@primevue/forms/resolvers/zod";
 import Button from "primevue/button";
 import Message from "primevue/message";
-import { LoginSchema, type Login } from "../../schemas/User";
+import type { Login } from "../../schemas/User";
 import FieldBlock from "@/components/blocks/FieldBlock.vue";
 import Divider from 'primevue/divider';
 import { Routes } from "@/router/routes";
 import LanguageSwitcher from "@/components/blocks/LanguageSwitcher.vue";
 import ThemeSwitcher from "@/components/blocks/ThemeSwitcher.vue";
-import { useTheme } from '@/composables/useTheme';
-
-import { useI18n } from 'vue-i18n'
-const { t } = useI18n()
-const { isDark } = useTheme();
+import { useLoginForm } from "@/composables/useLoginForm";
 
 withDefaults(
 	defineProps<{
@@ -28,18 +22,7 @@ const emit = defineEmits<{
 	submit: [values: Login];
 }>();
 
-const resolver = zodResolver(LoginSchema);
-
-const initialValues: Login = {
-	email: "",
-	password: "",
-};
-
-function onSubmit(event: FormSubmitEvent) {
-	if (event.valid) {
-		emit("submit", event.values as Login);
-	}
-}
+const { t, isDark, resolver, initialValues, onSubmit } = useLoginForm(emit);
 </script>
 
 <template>
@@ -66,7 +49,8 @@ function onSubmit(event: FormSubmitEvent) {
 
 				<!-- Mot de passe -->
 				<FieldBlock id="password" name="password" :label="t('auth.password')" type="password"
-					placeholder="••••••••" info direction="right" />
+					placeholder="••••••••" textType="link" info :info-text="t('auth.forgotPassword')"
+					direction="right" />
 
 				<Message v-if="errorMessage" severity="error" class="w-full">
 					{{ errorMessage }}

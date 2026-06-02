@@ -29,6 +29,7 @@
 		"required": "This field is required.",
 		"emailInvalid": "Invalid email address.",
 		"passwordMin": "Password must be at least 8 characters.",
+		"passwordConfirmMismatch": "Passwords do not match.",
 		"stringMin": "This field must be at least {min} character(s)."
 	}
 }

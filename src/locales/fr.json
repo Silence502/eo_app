@@ -29,6 +29,7 @@
 		"required": "Ce champ est obligatoire.",
 		"emailInvalid": "Adresse e-mail invalide.",
 		"passwordMin": "Le mot de passe doit contenir au moins 8 caractères.",
+		"passwordConfirmMismatch": "Les mots de passe ne correspondent pas.",
 		"stringMin": "Ce champ doit contenir au moins {min} caractère(s)."
 	}
 }
