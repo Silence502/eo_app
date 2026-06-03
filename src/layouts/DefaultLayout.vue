@@ -5,7 +5,7 @@ import Menu from 'primevue/menu';
 import Button from 'primevue/button';
 import { useRouter } from "vue-router";
 import { logout } from "@/api/auth";
-import { ref, computed, onMounted } from "vue";
+import { ref, computed } from "vue";
 import { Routes } from "@/router/routes";
 import { useI18n } from "vue-i18n";
 import { useUserStore } from "@/stores/userStore";
@@ -91,9 +91,15 @@ const toggle = (event: Event) => {
 				<!-- <ThemeSwitcher /> -->
 			</div>
 			<div>
-				<!-- <AvatarBlock /> -->
-				<Button :label="user.name" size="small" icon="pi pi-angle-down" iconPos="right" class="p-button-text"
-					@click="toggle" />
+				<Button size="large" icon="pi pi-angle-down" iconPos="right" class="p-button-text" @click="toggle" :pt="{
+					root: {
+						style: 'width: fit-content; display: flex; align-items: center; gap: 0.5rem;',
+					}
+				}">
+					<AvatarBlock :userFullname="user.name" shape="circle" />
+					{{ user.name }}
+					<i class="pi pi-angle-down"></i>
+				</Button>
 				<Menu :model="items" popup ref="menu">
 					<template #submenulabel="{ item }">
 						<div class="flex flex-col gap-0 p-2">
