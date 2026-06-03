@@ -23,9 +23,11 @@ const currentLayout = computed(() => {
 </script>
 
 <template>
-  <component v-if="isReady" :is="currentLayout">
-    <router-view />
-  </component>
+  <div class="page-wrapper">
+    <component v-if="isReady" :is="currentLayout">
+      <router-view />
+    </component>
+  </div>
 </template>
 
 <style scoped></style>

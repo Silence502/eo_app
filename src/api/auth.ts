@@ -5,7 +5,9 @@ import http, {
   clearSession,
   attemptRefresh,
 } from "./http";
-import type { Login, Register } from "@/schemas/User";
+import type { Login, Register, User } from "@/schemas/User";
+
+type PublicUser = Omit<User, "password" | "hashedRefreshToken">;
 
 export interface AuthResponse {
   accessToken: string;
@@ -41,6 +43,11 @@ export async function register(
   const { data } = await http.post<AuthResponse>("/v1.0/auth/register", values);
   setToken(data.accessToken);
   setRefreshToken(data.refreshToken);
+  return data;
+}
+
+export async function getProfile(): Promise<PublicUser> {
+  const { data } = await http.get<PublicUser>("/v1.0/auth/profile");
   return data;
 }
 

@@ -1,12 +1,21 @@
 @import "tailwindcss";
 @import "tailwindcss-primeui";
 @import "./base/_base.css";
+@import 'primeicons/primeicons.css';
+@import url('https://fonts.googleapis.com/css2?family=Gantari:ital,wght@0,100..900;1,100..900&display=swap');
+
+
 
 @custom-variant dark (&:where(.eo-dark, .eo-dark *));
 
 
 @layer base {
 	@apply box-border;
+}
+
+/* FONTS */
+.font-gantari {
+	font-family: 'Gantari', sans-serif;
 }
 
 html,
@@ -38,6 +47,30 @@ h2 {
 }
 
 .auth-layout-main {}
+
+.default-layout-header {
+	@apply h-[5vh] bg-white dark:bg-gray-800 flex items-center justify-center p-4 xl:px-0 fixed top-0 w-screen z-10 shadow-md;
+
+	.default-layout-header-content {
+		@apply w-full xl:w-300 h-full flex items-center justify-between gap-2;
+	}
+}
+
+.page-wrapper {
+	@apply flex flex-col min-h-screen;
+}
+
+.default-layout-main {
+	@apply pt-[5vh] flex-1 px-4 xl:px-0;
+}
+
+.default-layout-footer {
+	@apply h-[5vh] bg-white dark:bg-gray-800 flex items-center justify-center p-4 xl:px-0 w-full z-10 shadow-md;
+
+	.default-layout-footer-content {
+		@apply flex gap-2 text-sm;
+	}
+}
 
 .login-card {
 	padding: 100px 0 50px 0;

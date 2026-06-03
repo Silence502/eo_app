@@ -25,6 +25,17 @@
 	"dashboard": {
 		"title": "Dashboard"
 	},
+	"layout": {
+		"nav": {
+			"options": "Options",
+			"myProfile": "My profile",
+			"settings": "Settings"
+		},
+		"footer": {
+			"copyright": "© 2026 Event Orchestra. All rights reserved.",
+			"designedBy": "Designed by the"
+		}
+	},
 	"validation": {
 		"required": "This field is required.",
 		"emailInvalid": "Invalid email address.",
