@@ -38,7 +38,7 @@ if (getToken()) {
   try {
     const userStore = useUserStore();
     const profile = await getProfile();
-    userStore.setUser(profile);
+    userStore.setProfile(profile);
   } catch {
     // Token invalide ou expiré : la session sera nettoyée par l'intercepteur
   }

@@ -21,7 +21,7 @@
 * {
 	/* 1. Norme Standard (Firefox) */
 	scrollbar-width: thin;
-	scrollbar-color: #111111 #f3f4f649;
+	scrollbar-color: #4b4b4b transparent;
 	/* border-radius: 10px !important; */
 	/* Thumb (bleu) | Track (gris clair) */
 }
@@ -36,7 +36,7 @@
 }
 
 *::-webkit-scrollbar-track {
-	background: #f3f4f6;
+	background: transparent;
 	border-radius: 10px;
 	margin-block: 8px;
 	margin-inline: 8px;
