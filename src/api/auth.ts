@@ -5,9 +5,9 @@ import http, {
   clearSession,
   attemptRefresh,
 } from "./http";
-import type { Login, Register, User } from "@/schemas/User";
+import type { Login, Register, User, UserProfile } from "@/schemas/User";
 
-type PublicUser = Omit<User, "password" | "hashedRefreshToken">;
+type PublicProfile = Omit<UserProfile, "password" | "hashedRefreshToken">;
 
 export interface AuthResponse {
   accessToken: string;
@@ -46,8 +46,15 @@ export async function register(
   return data;
 }
 
-export async function getProfile(): Promise<PublicUser> {
-  const { data } = await http.get<PublicUser>("/v1.0/auth/profile");
+export async function getProfile(): Promise<PublicProfile> {
+  const { data } = await http.get<PublicProfile>("/v1.0/auth/profile");
+  return data;
+}
+
+export async function updateProfile(
+  values: Partial<PublicProfile>,
+): Promise<PublicProfile> {
+  const { data } = await http.put<PublicProfile>("/v1.0/auth/profile", values);
   return data;
 }
 

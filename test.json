@@ -1,0 +1,33 @@
+{
+	"address": {
+		"city": "Anytown",
+		"country": "USA",
+		"otherStreet": null,
+		"state": "CA",
+		"street": "123 Main St",
+		"zip": "12345"
+	},
+	"business": {
+		"address": {
+			"city": "Businesstown",
+			"country": "USA",
+			"otherStreet": "Suite 200",
+			"state": "NY",
+			"street": "456 Business Rd",
+			"zip": "67890"
+		},
+		"email": "info@acme.com",
+		"name": "Acme Inc.",
+		"phone": "555-555-5555",
+		"vatNumber": "123456789",
+		"website": "https://www.acme.com"
+	},
+	"createdAt": "2026-06-10T15:39:23",
+	"email": "user@example.com",
+	"firstName": "John",
+	"id": 1,
+	"lastName": "Doe",
+	"plan": "free",
+	"role": "USER",
+	"updatedAt": "2026-06-10T15:42:08"
+}

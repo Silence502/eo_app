@@ -18,6 +18,7 @@ const props = defineProps<{
 	info?: boolean;
 	infoText?: string;
 	infoDirection?: "right" | "left";
+	disabled?: boolean;
 }>();
 </script>
 
@@ -28,9 +29,9 @@ const props = defineProps<{
 				{{ label }}
 			</label>
 			<InputText v-if="type === 'text'" :id="id" :name="name" v-bind="$field" :type="type"
-				:placeholder="placeholder" class="w-full" :invalid="$field.invalid" />
+				:placeholder="placeholder" class="w-full" :invalid="$field.invalid" :disabled="disabled" />
 			<Password v-else-if="type === 'password'" :id="id" :name="name" v-bind="$field" :placeholder="placeholder"
-				class="w-full" :invalid="$field.invalid" :feedback="false" toggle-mask fluid />
+				class="w-full" :invalid="$field.invalid" :feedback="false" toggle-mask fluid :disabled="disabled" />
 			<Message v-if="$field.invalid" severity="error" size="small" variant="simple">
 				{{ t($field.error?.message ?? '') }}
 			</Message>

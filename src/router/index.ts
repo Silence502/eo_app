@@ -42,15 +42,6 @@ const router = createRouter({
       },
     },
     {
-      path: "/profile",
-      name: "profile",
-      component: () => import("../presentations/profile/ProfileView.vue"),
-      meta: {
-        requiresAuth: true,
-        layout: "DefaultLayout",
-      },
-    },
-    {
       path: "/:pathMatch(.*)*",
       redirect: "/",
     },

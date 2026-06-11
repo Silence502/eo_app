@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import ThemeSwitcher from "@/components/blocks/ThemeSwitcher.vue";
 import { useTheme } from "@/composables/useTheme";
 import Menu from 'primevue/menu';
 import Button from 'primevue/button';
@@ -10,6 +9,9 @@ import { Routes } from "@/router/routes";
 import { useI18n } from "vue-i18n";
 import { useUserStore } from "@/stores/userStore";
 import AvatarBlock from "@/components/blocks/AvatarBlock.vue";
+import Dialog from 'primevue/dialog';
+import ProfileDialog from "@/presentations/profile/ProfileDialog.vue";
+
 
 const { isDark } = useTheme();
 const router = useRouter();
@@ -25,10 +27,12 @@ async function handleLogout() {
 	}
 }
 
+const showProfileDialog = ref(false);
+
 const userStore = useUserStore();
 
 const user = computed(() => {
-	if (!userStore.user) {
+	if (!userStore.profile) {
 		return {
 			name: '',
 			email: '',
@@ -37,7 +41,7 @@ const user = computed(() => {
 
 	return {
 		name: userStore.fullName,
-		email: userStore.user.email,
+		email: userStore.profile.email,
 	};
 });
 
@@ -53,7 +57,7 @@ const items = computed(() => [
 				label: t('layout.nav.myProfile'),
 				icon: 'pi pi-user',
 				command: () => {
-					router.push('/profile');
+					showProfileDialog.value = true;
 				}
 			},
 			{
@@ -88,12 +92,11 @@ const toggle = (event: Event) => {
 					<img v-if="isDark" src="@/assets/svg/eo_logo_horizontal_dark.svg" alt="Logo" class="h-12">
 					<img v-else src="@/assets/svg/eo_logo_horizontal_light.svg" alt="Logo" class="h-12">
 				</router-link>
-				<!-- <ThemeSwitcher /> -->
 			</div>
 			<div>
 				<Button size="large" icon="pi pi-angle-down" iconPos="right" class="p-button-text" @click="toggle" :pt="{
 					root: {
-						style: 'width: fit-content; display: flex; align-items: center; gap: 0.5rem;',
+						style: 'width: fit-content; display: flex; align-items: center; gap: 0.5rem; font-size: 18px; font-weight: 600;',
 					}
 				}">
 					<AvatarBlock :userFullname="user.name" shape="circle" />
@@ -110,6 +113,13 @@ const toggle = (event: Event) => {
 				</Menu>
 			</div>
 		</div>
+
+		<!-- PROFILE DIALOG -->
+		<Dialog header="Mon profil" :style="{ width: '45rem' }" v-model:visible="showProfileDialog" :modal="true"
+			:closable="true" :draggable="false">
+			<ProfileDialog :user="user" :userStore="userStore" />
+		</Dialog>
+		<!-- PROFILE DIALOG -->
 	</header>
 	<main class="default-layout-main">
 		<slot />

@@ -19,7 +19,7 @@ async function handleLogin(values: Login) {
 	errorMessage.value = null;
 	try {
 		await login(values);
-		userStore.setUser(await getProfile());
+		userStore.setProfile(await getProfile());
 		router.push(Routes.Dashboard);
 	} catch {
 		errorMessage.value = t("auth.invalidCredentials");

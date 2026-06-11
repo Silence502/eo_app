@@ -1,25 +1,39 @@
 import { defineStore } from "pinia";
 import { ref, computed } from "vue";
-import type { User } from "@/schemas/User";
+import type { UserProfile } from "@/schemas/User";
 
-type PublicUser = Omit<User, "password" | "hashedRefreshToken">;
+type PublicProfile = Omit<UserProfile, "password" | "hashedRefreshToken">;
 
 export const useUserStore = defineStore("user", () => {
-  const user = ref<PublicUser | null>(null);
+  const profile = ref<PublicProfile | null>(null);
 
-  const isAuthenticated = computed(() => user.value !== null);
-  const isAdmin = computed(() => user.value?.role === "admin");
+  const isAuthenticated = computed(() => profile.value !== null);
+  const isAdmin = computed(() => profile.value?.role === "ADMIN");
   const fullName = computed(() =>
-    user.value ? `${user.value.firstName} ${user.value.lastName}` : "",
+    profile.value ? `${profile.value.firstName} ${profile.value.lastName}` : "",
   );
 
-  function setUser(data: PublicUser): void {
-    user.value = data;
+  function setProfile(data: PublicProfile): void {
+    profile.value = data;
   }
 
-  function clearUser(): void {
-    user.value = null;
+  function clearProfile(): void {
+    profile.value = null;
   }
 
-  return { user, isAuthenticated, isAdmin, fullName, setUser, clearUser };
+  function updateProfile(data: Partial<PublicProfile>): void {
+    if (profile.value) {
+      profile.value = { ...profile.value, ...data };
+    }
+  }
+
+  return {
+    profile,
+    isAuthenticated,
+    isAdmin,
+    fullName,
+    setProfile,
+    clearProfile,
+    updateProfile,
+  };
 });

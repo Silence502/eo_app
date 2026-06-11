@@ -1,5 +1,42 @@
 import { z } from "zod";
 
+export const AddressSchema = z.object({
+  street: z.string(),
+  otherStreet: z.string().nullable(),
+  city: z.string(),
+  state: z.string(),
+  zip: z.string(),
+  country: z.string(),
+});
+
+export type Address = z.infer<typeof AddressSchema>;
+
+export const BusinessSchema = z.object({
+  name: z.string(),
+  email: z.email(),
+  phone: z.string(),
+  website: z.url(),
+  vatNumber: z.string(),
+  address: AddressSchema,
+});
+
+export type Business = z.infer<typeof BusinessSchema>;
+
+export const UserProfileSchema = z.object({
+  id: z.number().int(),
+  email: z.email(),
+  firstName: z.string(),
+  lastName: z.string(),
+  role: z.enum(["USER", "ADMIN"]),
+  plan: z.enum(["free", "pro", "enterprise"]),
+  address: AddressSchema.nullable().optional(),
+  business: BusinessSchema.nullable().optional(),
+  createdAt: z.date().readonly(),
+  updatedAt: z.date().readonly(),
+});
+
+export type UserProfile = z.infer<typeof UserProfileSchema>;
+
 export const UserSchema = z.object({
   id: z.string().optional(),
   email: z.email({ error: () => ({ message: "validation.emailInvalid" }) }),
@@ -12,7 +49,7 @@ export const UserSchema = z.object({
   password: z
     .string()
     .min(8, { error: () => ({ message: "validation.passwordMin" }) }),
-  role: z.enum(["user", "admin"]).default("user"),
+  role: z.enum(["USER", "ADMIN"]).default("USER"),
   plan: z.enum(["free", "pro", "enterprise"]).default("free"),
   hashedRefreshToken: z.string().optional(),
   createdAt: z.date().readonly(),

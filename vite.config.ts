@@ -16,7 +16,7 @@ export default defineConfig({
   server: {
     headers: {
       "Content-Security-Policy":
-        "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' ws://localhost:*; base-uri 'self'; form-action 'self'; frame-ancestors 'self' http://localhost:*;",
+        "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' ws://localhost:*; base-uri 'self'; form-action 'self'; frame-ancestors 'self' http://localhost:*;",
       "X-Content-Type-Options": "nosniff",
     },
     proxy: {
