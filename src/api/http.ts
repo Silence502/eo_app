@@ -34,6 +34,20 @@ export function clearSession(): void {
   localStorage.removeItem(REFRESH_TOKEN_KEY);
 }
 
+export function isTokenExpired(): boolean {
+  const token = getToken();
+  if (!token) return true;
+  try {
+    const parts = token.split(".");
+    const encoded = parts[1];
+    if (!encoded) return true;
+    const payload = JSON.parse(atob(encoded));
+    return typeof payload.exp === "number" && payload.exp * 1000 < Date.now();
+  } catch {
+    return true;
+  }
+}
+
 const http: AxiosInstance = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
   headers: {

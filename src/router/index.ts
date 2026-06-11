@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
-import { getToken } from "@/api/http";
+import { getToken, isTokenExpired, clearSession } from "@/api/http";
 import { PUBLIC_ROUTES } from "@/router/routes";
 
 const router = createRouter({
@@ -49,9 +49,15 @@ const router = createRouter({
 });
 
 router.beforeEach(to => {
-  const isAuthenticated = !!getToken();
+  const token = getToken();
+  const isAuthenticated = !!token && !isTokenExpired();
+
+  if (!isAuthenticated && token) {
+    clearSession();
+  }
+
   if (!(PUBLIC_ROUTES as string[]).includes(to.path) && !isAuthenticated) {
-    return { name: "home" };
+    return { name: "login" };
   }
 });
 
