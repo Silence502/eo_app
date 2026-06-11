@@ -3,7 +3,11 @@ import { zodResolver } from "@primevue/forms/resolvers/zod";
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { useTheme } from "@/composables/useTheme";
-import { UserProfileSchema, type UserProfile } from "@/schemas/User";
+import {
+  UserProfileFormSchema,
+  type UserProfileForm,
+  type UserProfile,
+} from "@/schemas/User";
 import { useUserStore } from "@/stores/userStore";
 
 export function useProfileForm(
@@ -13,24 +17,22 @@ export function useProfileForm(
   const { isDark } = useTheme();
   const userStore = useUserStore();
 
-  const resolver = zodResolver(UserProfileSchema);
+  const resolver = zodResolver(UserProfileFormSchema);
 
-  const initialValues = computed<Partial<UserProfile>>(() => ({
-    id: 0,
+  const initialValues = computed<Partial<UserProfileForm>>(() => ({
     email: userStore.profile?.email ?? "",
     firstName: userStore.profile?.firstName ?? "",
     lastName: userStore.profile?.lastName ?? "",
-    role: userStore.profile?.role ?? "USER",
-    plan: userStore.profile?.plan ?? "free",
     address: userStore.profile?.address ?? null,
     business: userStore.profile?.business ?? null,
-    createdAt: userStore.profile?.createdAt,
-    updatedAt: userStore.profile?.updatedAt,
   }));
 
   function onSubmit(event: FormSubmitEvent) {
     if (event.valid && event.values) {
-      const values = event.values as UserProfile;
+      const values: UserProfile = {
+        ...userStore.profile!,
+        ...(event.values as UserProfileForm),
+      };
       emit("submit", values);
     }
   }

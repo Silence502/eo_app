@@ -54,7 +54,10 @@ export async function getProfile(): Promise<PublicProfile> {
 export async function updateProfile(
   values: Partial<PublicProfile>,
 ): Promise<PublicProfile> {
-  const { data } = await http.put<PublicProfile>("/v1.0/auth/profile", values);
+  const { data } = await http.patch<PublicProfile>(
+    "/v1.0/auth/profile",
+    values,
+  );
   return data;
 }
 

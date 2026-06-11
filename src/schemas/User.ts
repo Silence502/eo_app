@@ -37,6 +37,16 @@ export const UserProfileSchema = z.object({
 
 export type UserProfile = z.infer<typeof UserProfileSchema>;
 
+export const UserProfileFormSchema = z.object({
+  firstName: z.string(),
+  lastName: z.string(),
+  email: z.email(),
+  address: AddressSchema.nullable().optional(),
+  business: BusinessSchema.nullable().optional(),
+});
+
+export type UserProfileForm = z.infer<typeof UserProfileFormSchema>;
+
 export const UserSchema = z.object({
   id: z.string().optional(),
   email: z.email({ error: () => ({ message: "validation.emailInvalid" }) }),
