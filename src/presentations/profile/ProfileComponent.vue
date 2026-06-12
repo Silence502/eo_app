@@ -12,7 +12,7 @@ import TabPanels from 'primevue/tabpanels';
 import TabPanel from 'primevue/tabpanel';
 import { useProfileForm } from "@/composables/useProfileForm";
 import { useFormDirty } from "@/utils/formDirty";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import Badge from 'primevue/badge';
 
 const props = withDefaults(
@@ -34,11 +34,22 @@ const props = withDefaults(
 
 const formRef = ref<InstanceType<typeof Form> | null>(null);
 const isDirty = useFormDirty(formRef);
+const isUserFieldDirty = ref(false);
+const isBusinessFieldDirty = ref(false);
 
-const { t, isDark, resolver, initialValues, isLoading, errorMessage, onSubmit } = useProfileForm(formRef);
+const { t, isDark, resolver, initialValues, isLoading, errorMessage, onSubmit, resetForm } = useProfileForm(formRef);
+
+function handleUserFieldDirty(value: boolean) {
+	isUserFieldDirty.value = value;
+}
+
+function handleBusinessFieldDirty(value: boolean) {
+	isBusinessFieldDirty.value = value;
+}
 
 onMounted(() => {
 	// console.log(formRef.value); // Debug initial form states
+	// console.log("Initial isUserFieldDirty:", isUserFieldDirty.value); // Debug initial user field dirty state
 });
 </script>
 
@@ -52,8 +63,21 @@ onMounted(() => {
 
 		<Tabs value="profile" class="w-full">
 			<TabList>
-				<Tab value="profile">Utilisateur</Tab>
-				<Tab value="business">Entreprise</Tab>
+				<Tab value="profile">
+					<div class="flex items-center gap-2">
+						<i class="pi pi-user"></i>
+						<span>Utilisateur</span>
+					</div>
+
+					<Badge v-if="isUserFieldDirty" severity="warn" class="ml-2 w-1 absolute top-2 right-2" />
+				</Tab>
+				<Tab value="business">
+					<div class="flex items-center gap-2">
+						<i class="pi pi-building"></i>
+						<span>Entreprise</span>
+					</div>
+					<Badge v-if="isBusinessFieldDirty" severity="warn" class="ml-2 w-1 absolute top-2 right-2" />
+				</Tab>
 			</TabList>
 
 			<TabPanels>
@@ -63,23 +87,31 @@ onMounted(() => {
 					<TabPanel value="profile">
 						<div class="w-full flex flex-col gap-4">
 							<div class="grid grid-cols-2 gap-4 w-full">
-								<FieldBlock id="firstName" name="firstName" label="Prénom" type="text" />
-								<FieldBlock id="lastName" name="lastName" label="Nom" type="text" />
+								<FieldBlock @isdirty="handleUserFieldDirty" id="firstName" name="firstName"
+									label="Prénom" type="text" />
+								<FieldBlock @isdirty="handleUserFieldDirty" id="lastName" name="lastName" label="Nom"
+									type="text" />
 							</div>
 							<div class="grid grid-cols-2 gap-4 w-full">
-								<FieldBlock id="email" name="email" label="Email" type="text" />
-								<FieldBlock id="phone" name="phone" label="Téléphone" type="text" />
+								<FieldBlock @isdirty="handleUserFieldDirty" id="email" name="email" label="Email"
+									type="text" />
+								<FieldBlock @isdirty="handleUserFieldDirty" id="phone" name="phone" label="Téléphone"
+									type="text" />
 							</div>
 							<Divider />
-							<FieldBlock id="address.street" name="address.street" label="Adresse" type="text" />
-							<FieldBlock id="address.otherStreet" name="address.otherStreet" label="Complément d'adresse"
-								type="text" />
+							<FieldBlock @isdirty="handleUserFieldDirty" id="address.street" name="address.street"
+								label="Adresse" type="text" />
+							<FieldBlock @isdirty="handleUserFieldDirty" id="address.otherStreet"
+								name="address.otherStreet" label="Complément d'adresse" type="text" />
 							<div class="grid grid-cols-2 gap-4 w-full">
-								<FieldBlock id="address.city" name="address.city" label="Ville" type="text" />
-								<FieldBlock id="address.zip" name="address.zip" label="Code postal" type="text" />
-								<FieldBlock id="address.state" name="address.state" label="Province / Région / État"
-									type="text" />
-								<FieldBlock id="address.country" name="address.country" label="Pays" type="text" />
+								<FieldBlock @isdirty="handleUserFieldDirty" id="address.city" name="address.city"
+									label="Ville" type="text" />
+								<FieldBlock @isdirty="handleUserFieldDirty" id="address.zip" name="address.zip"
+									label="Code postal" type="text" />
+								<FieldBlock @isdirty="handleUserFieldDirty" id="address.state" name="address.state"
+									label="Province / Région / État" type="text" />
+								<FieldBlock @isdirty="handleUserFieldDirty" id="address.country" name="address.country"
+									label="Pays" type="text" />
 
 							</div>
 						</div>
@@ -88,35 +120,36 @@ onMounted(() => {
 					<!-- BUSINESS TAB -->
 					<TabPanel value="business">
 						<div class="w-full flex flex-col gap-4">
-							<FieldBlock id="business.name" name="business.name" label="Nom de l'entreprise"
-								type="text" />
+							<FieldBlock @isdirty="handleBusinessFieldDirty" id="business.name" name="business.name"
+								label="Nom de l'entreprise" type="text" />
 							<div class="grid grid-cols-2 gap-4 w-full">
-								<FieldBlock id="business.email" name="business.email" label="Email de l'entreprise"
-									type="text" />
-								<FieldBlock id="business.phone" name="business.phone" label="Téléphone" type="text" />
+								<FieldBlock @isdirty="handleBusinessFieldDirty" id="business.email"
+									name="business.email" label="Email de l'entreprise" type="text" />
+								<FieldBlock @isdirty="handleBusinessFieldDirty" id="business.phone"
+									name="business.phone" label="Téléphone" type="text" />
 							</div>
 
 							<div class="grid grid-cols-2 gap-4 w-full">
 								<!-- <FieldBlock id="business.siret" name="business.siret" label="SIRET" type="text" /> -->
-								<FieldBlock id="business.vatNumber" name="business.vatNumber"
-									label="TVA intracommunautaire" type="text" />
-								<FieldBlock id="business.website" name="business.website" label="Site web"
-									type="text" />
+								<FieldBlock @isdirty="handleBusinessFieldDirty" id="business.vatNumber"
+									name="business.vatNumber" label="TVA intracommunautaire" type="text" />
+								<FieldBlock @isdirty="handleBusinessFieldDirty" id="business.website"
+									name="business.website" label="Site web" type="text" />
 							</div>
 							<Divider />
-							<FieldBlock id="business.address.street" name="business.address.street" label="Adresse"
-								type="text" />
-							<FieldBlock id="business.address.otherStreet" name="business.address.otherStreet"
-								label="Complément d'adresse" type="text" />
+							<FieldBlock @isdirty="handleBusinessFieldDirty" id="business.address.street"
+								name="business.address.street" label="Adresse" type="text" />
+							<FieldBlock @isdirty="handleBusinessFieldDirty" id="business.address.otherStreet"
+								name="business.address.otherStreet" label="Complément d'adresse" type="text" />
 							<div class="grid grid-cols-2 gap-4 w-full">
-								<FieldBlock id="business.address.city" name="business.address.city" label="Ville"
-									type="text" />
-								<FieldBlock id="business.address.zip" name="business.address.zip" label="Code postal"
-									type="text" />
-								<FieldBlock id="business.address.state" name="business.address.state"
-									label="Province / Région / État" type="text" />
-								<FieldBlock id="business.address.country" name="business.address.country" label="Pays"
-									type="text" />
+								<FieldBlock @isdirty="handleBusinessFieldDirty" id="business.address.city"
+									name="business.address.city" label="Ville" type="text" />
+								<FieldBlock @isdirty="handleBusinessFieldDirty" id="business.address.zip"
+									name="business.address.zip" label="Code postal" type="text" />
+								<FieldBlock @isdirty="handleBusinessFieldDirty" id="business.address.state"
+									name="business.address.state" label="Province / Région / État" type="text" />
+								<FieldBlock @isdirty="handleBusinessFieldDirty" id="business.address.country"
+									name="business.address.country" label="Pays" type="text" />
 							</div>
 						</div>
 					</TabPanel>
@@ -132,9 +165,9 @@ onMounted(() => {
 							</div>
 							<div class="flex flex-row justify-end gap-4">
 								<Button type="button" severity="secondary" label="Annuler" class="w-fit"
-									:loading="isLoading" :disabled="isLoading" @click="$form.reset()" />
+									:loading="isLoading" :disabled="isLoading || !isDirty" @click="resetForm" />
 								<Button type="submit" label="Enregistrer" class="w-fit" :loading="isLoading"
-									:disabled="isLoading" />
+									:disabled="isLoading || !isDirty" />
 							</div>
 						</div>
 					</div>

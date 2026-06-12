@@ -4,7 +4,7 @@ import InputText from "primevue/inputtext";
 import Password from "primevue/password";
 import Message from "primevue/message";
 import Button from "primevue/button";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import { useI18n } from 'vue-i18n';
 import { useFieldDirty } from "@/utils/formDirty";
 import Badge from 'primevue/badge';
@@ -26,6 +26,14 @@ const props = defineProps<{
 
 const fieldRef = ref<InstanceType<typeof FormField> | null>(null);
 const isFieldDirty = useFieldDirty(fieldRef);
+
+const emit = defineEmits<{
+	(e: "isdirty", value: boolean): void
+}>();
+
+watch(isFieldDirty, (newValue) => {
+	emit("isdirty", newValue);
+});
 
 </script>
 
