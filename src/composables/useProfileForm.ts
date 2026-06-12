@@ -23,6 +23,7 @@ export function useProfileForm(
     email: userStore.profile?.email ?? "",
     firstName: userStore.profile?.firstName ?? "",
     lastName: userStore.profile?.lastName ?? "",
+    phone: userStore.profile?.phone ?? null,
     address: userStore.profile?.address ?? null,
     business: userStore.profile?.business ?? null,
   }));

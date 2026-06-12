@@ -116,7 +116,11 @@ http.interceptors.response.use(
       _retry?: boolean;
     };
 
-    if (error.response?.status !== 401 || originalRequest._retry) {
+    const status = error.response?.status;
+    const is401 = status === 401;
+    const is403Expired = status === 403 && isTokenExpired();
+
+    if ((!is401 && !is403Expired) || originalRequest._retry) {
       return Promise.reject(error);
     }
 

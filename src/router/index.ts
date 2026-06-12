@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
-import { getToken, isTokenExpired, clearSession } from "@/api/http";
+import { getToken, getRefreshToken, isTokenExpired } from "@/api/http";
 import { PUBLIC_ROUTES } from "@/router/routes";
 
 const router = createRouter({
@@ -49,12 +49,11 @@ const router = createRouter({
 });
 
 router.beforeEach(to => {
-  const token = getToken();
-  const isAuthenticated = !!token && !isTokenExpired();
-
-  if (!isAuthenticated && token) {
-    clearSession();
-  }
+  const hasValidToken = !!getToken() && !isTokenExpired();
+  const hasRefreshToken = !!getRefreshToken();
+  // L'utilisateur est considéré authentifié s'il a un token valide
+  // OU un refresh token (l'intercepteur HTTP se chargera du renouvellement)
+  const isAuthenticated = hasValidToken || hasRefreshToken;
 
   if (!(PUBLIC_ROUTES as string[]).includes(to.path) && !isAuthenticated) {
     return { name: "login" };

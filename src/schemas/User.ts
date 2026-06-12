@@ -27,6 +27,7 @@ export const UserProfileSchema = z.object({
   email: z.email(),
   firstName: z.string(),
   lastName: z.string(),
+  phone: z.string().nullable(),
   role: z.enum(["USER", "ADMIN"]),
   plan: z.enum(["free", "pro", "enterprise"]),
   address: AddressSchema.nullable().optional(),
@@ -41,6 +42,7 @@ export const UserProfileFormSchema = z.object({
   firstName: z.string(),
   lastName: z.string(),
   email: z.email(),
+  phone: z.string().nullable(),
   address: AddressSchema.nullable().optional(),
   business: BusinessSchema.nullable().optional(),
 });
@@ -50,6 +52,7 @@ export type UserProfileForm = z.infer<typeof UserProfileFormSchema>;
 export const UserSchema = z.object({
   id: z.string().optional(),
   email: z.email({ error: () => ({ message: "validation.emailInvalid" }) }),
+  phone: z.string().nullable(),
   firstName: z
     .string()
     .min(1, { error: () => ({ message: "validation.required" }) }),
