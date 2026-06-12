@@ -11,7 +11,9 @@ import Tab from 'primevue/tab';
 import TabPanels from 'primevue/tabpanels';
 import TabPanel from 'primevue/tabpanel';
 import { useProfileForm } from "@/composables/useProfileForm";
-import type { UserProfile } from "@/schemas/User";
+import { useFormDirty } from "@/utils/formDirty";
+import { ref, onMounted } from "vue";
+import Badge from 'primevue/badge';
 
 const props = withDefaults(
 	defineProps<{
@@ -20,8 +22,6 @@ const props = withDefaults(
 			name: string;
 			email: string;
 		};
-		loading?: boolean;
-		errorMessage?: string | null;
 	}>(),
 	{
 		userStore: null,
@@ -29,17 +29,17 @@ const props = withDefaults(
 			name: 'John Doe',
 			email: 'exemple@email.com',
 		}),
-		loading: false,
-		errorMessage: null,
 	},
 );
 
-const emit = defineEmits<{
-	submit: [values: UserProfile];
-}>();
+const formRef = ref<InstanceType<typeof Form> | null>(null);
+const isDirty = useFormDirty(formRef);
 
-const { t, isDark, resolver, initialValues, onSubmit } = useProfileForm(emit);
+const { t, isDark, resolver, initialValues, isLoading, errorMessage, onSubmit } = useProfileForm(formRef);
 
+onMounted(() => {
+	// console.log(formRef.value); // Debug initial form states
+});
 </script>
 
 <template>
@@ -47,6 +47,8 @@ const { t, isDark, resolver, initialValues, onSubmit } = useProfileForm(emit);
 		<div class="w-full flex items-center justify-start">
 			<AvatarFullBlock :user="user" shape="circle" size="large" />
 		</div>
+
+		<!-- {{ isDirty ? 'Formulaire modifié' : 'Formulaire non modifié' }} -->
 
 		<Tabs value="profile" class="w-full">
 			<TabList>
@@ -56,7 +58,8 @@ const { t, isDark, resolver, initialValues, onSubmit } = useProfileForm(emit);
 
 			<TabPanels>
 				<!-- PROFILE TAB -->
-				<Form :resolver="resolver" :initial-values="initialValues" @submit="onSubmit">
+				<Form ref="formRef" :resolver="resolver" :initial-values="initialValues" @submit="onSubmit"
+					v-slot="$form">
 					<TabPanel value="profile">
 						<div class="w-full flex flex-col gap-4">
 							<div class="grid grid-cols-2 gap-4 w-full">
@@ -122,11 +125,17 @@ const { t, isDark, resolver, initialValues, onSubmit } = useProfileForm(emit);
 						<Message v-if="errorMessage" severity="error" class="w-full">
 							{{ errorMessage }}
 						</Message>
-						<div class="flex flex-row justify-end gap-4">
-							<Button type="button" severity="secondary" label="Annuler" class="w-fit" :loading="loading"
-								:disabled="loading" />
-							<Button type="submit" label="Enregistrer" class="w-fit" :loading="loading"
-								:disabled="loading" />
+						<div class="flex flex-row justify-between gap-4">
+							<div class="flex flex-row justify-start gap-4">
+								<Message v-if="isDirty" severity="warn" variant="outlined">En cours de modification
+								</Message>
+							</div>
+							<div class="flex flex-row justify-end gap-4">
+								<Button type="button" severity="secondary" label="Annuler" class="w-fit"
+									:loading="isLoading" :disabled="isLoading" @click="$form.reset()" />
+								<Button type="submit" label="Enregistrer" class="w-fit" :loading="isLoading"
+									:disabled="isLoading" />
+							</div>
 						</div>
 					</div>
 				</Form>

@@ -1,6 +1,6 @@
-import type { FormSubmitEvent } from "@primevue/forms";
+import type { Form, FormSubmitEvent } from "@primevue/forms";
 import { zodResolver } from "@primevue/forms/resolvers/zod";
-import { computed } from "vue";
+import { computed, nextTick, ref, type Ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useTheme } from "@/composables/useTheme";
 import {
@@ -9,13 +9,17 @@ import {
   type UserProfile,
 } from "@/schemas/User";
 import { useUserStore } from "@/stores/userStore";
+import { updateProfile } from "@/api/auth";
+import { useToast } from "primevue/usetoast";
 
-export function useProfileForm(
-  emit: (event: "submit", values: UserProfile) => void,
-) {
+export function useProfileForm(formRef: Ref<InstanceType<typeof Form> | null>) {
   const { t } = useI18n();
   const { isDark } = useTheme();
   const userStore = useUserStore();
+  const toast = useToast();
+
+  const isLoading = ref(false);
+  const errorMessage = ref<string | null>(null);
 
   const resolver = zodResolver(UserProfileFormSchema);
 
@@ -28,14 +32,42 @@ export function useProfileForm(
     business: userStore.profile?.business ?? null,
   }));
 
-  function onSubmit(event: FormSubmitEvent) {
+  async function onSubmit(event: FormSubmitEvent) {
     if (event.valid && event.values) {
       const values: UserProfile = {
         ...userStore.profile!,
         ...(event.values as UserProfileForm),
       };
-      emit("submit", values);
+      isLoading.value = true;
+      errorMessage.value = null;
+      try {
+        await updateProfile(values);
+        userStore.updateProfile(values);
+        await nextTick();
+        toast.add({
+          severity: "success",
+          summary: t("profile.updateSuccess"),
+          detail: t("profile.updateSuccessDetail"),
+          life: 3000,
+        });
+        resetForm();
+      } catch (error) {
+        errorMessage.value = (error as Error).message;
+        toast.add({
+          severity: "error",
+          summary: t("profile.updateError"),
+          detail: errorMessage.value,
+          life: 3000,
+        });
+      } finally {
+        isLoading.value = false;
+      }
     }
+  }
+
+  async function resetForm() {
+    (formRef.value as any)?.reset();
+    errorMessage.value = null;
   }
 
   return {
@@ -43,6 +75,9 @@ export function useProfileForm(
     resolver,
     isDark,
     initialValues,
+    isLoading,
+    errorMessage,
     onSubmit,
+    resetForm,
   };
 }

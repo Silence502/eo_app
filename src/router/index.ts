@@ -57,6 +57,8 @@ router.beforeEach(to => {
 
   if (!(PUBLIC_ROUTES as string[]).includes(to.path) && !isAuthenticated) {
     return { name: "login" };
+  } else if ((PUBLIC_ROUTES as string[]).includes(to.path) && isAuthenticated) {
+    return { name: "dashboard" };
   }
 });
 

@@ -4,8 +4,11 @@ import InputText from "primevue/inputtext";
 import Password from "primevue/password";
 import Message from "primevue/message";
 import Button from "primevue/button";
-
+import { ref, onMounted } from "vue";
 import { useI18n } from 'vue-i18n';
+import { useFieldDirty } from "@/utils/formDirty";
+import Badge from 'primevue/badge';
+
 const { t } = useI18n();
 
 const props = defineProps<{
@@ -20,13 +23,18 @@ const props = defineProps<{
 	infoDirection?: "right" | "left";
 	disabled?: boolean;
 }>();
+
+const fieldRef = ref<InstanceType<typeof FormField> | null>(null);
+const isFieldDirty = useFieldDirty(fieldRef);
+
 </script>
 
 <template>
-	<FormField v-slot="$field" :name="name">
+	<FormField ref="fieldRef" v-slot="$field" :name="name">
 		<div class="flex flex-col gap-1">
 			<label :for="id">
 				{{ label }}
+				<Badge v-if="isFieldDirty" severity="warn" class="ml-2 w-1" />
 			</label>
 			<InputText v-if="type === 'text'" :id="id" :name="name" v-bind="$field" :type="type"
 				:placeholder="placeholder" class="w-full" :invalid="$field.invalid" :disabled="disabled" />

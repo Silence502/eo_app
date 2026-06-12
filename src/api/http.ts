@@ -34,8 +34,7 @@ export function clearSession(): void {
   localStorage.removeItem(REFRESH_TOKEN_KEY);
 }
 
-export function isTokenExpired(): boolean {
-  const token = getToken();
+function decodeTokenExpiry(token: string | null): boolean {
   if (!token) return true;
   try {
     const parts = token.split(".");
@@ -48,6 +47,14 @@ export function isTokenExpired(): boolean {
   }
 }
 
+export function isTokenExpired(): boolean {
+  return decodeTokenExpiry(getToken());
+}
+
+export function isRefreshTokenExpired(): boolean {
+  return decodeTokenExpiry(getRefreshToken());
+}
+
 const http: AxiosInstance = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
   headers: {
@@ -58,9 +65,18 @@ const http: AxiosInstance = axios.create({
   timeout: 10_000,
 });
 
-// Intercepteur de requête : injecte le token Bearer si présent
+// Intercepteur de requête : refresh proactif si l'accessToken est expiré, puis injection du token
 http.interceptors.request.use(
-  (config: InternalAxiosRequestConfig) => {
+  async (config: InternalAxiosRequestConfig) => {
+    if (isTokenExpired() && getRefreshToken()) {
+      try {
+        await getRefreshPromise();
+      } catch {
+        clearSession();
+        window.location.href = "/login";
+        return Promise.reject(new Error("Session expirée"));
+      }
+    }
     const token = getToken();
     if (token) {
       config.headers.set("Authorization", `Bearer ${token}`);
@@ -71,44 +87,40 @@ http.interceptors.request.use(
 );
 
 // --- Gestion du refresh token ---
-let isRefreshing = false;
-type QueueItem = {
-  resolve: (token: string) => void;
-  reject: (err: unknown) => void;
-};
-let failedQueue: QueueItem[] = [];
+// Une seule promesse partagée pour éviter les refreshs concurrents
+let refreshPromise: Promise<string> | null = null;
 
-function processQueue(error: unknown, token: string | null): void {
-  failedQueue.forEach(item => {
-    if (error) {
-      item.reject(error);
-    } else {
-      item.resolve(token as string);
-    }
-  });
-  failedQueue = [];
+function getRefreshPromise(): Promise<string> {
+  if (!refreshPromise) {
+    refreshPromise = attemptRefresh().finally(() => {
+      refreshPromise = null;
+    });
+  }
+  return refreshPromise;
 }
 
 export async function attemptRefresh(): Promise<string> {
   const refreshToken = getRefreshToken();
   if (!refreshToken) throw new Error("No refresh token");
 
+  // Le backend attend le refreshToken dans le header Authorization (Bearer)
   // Appel direct (sans l'instance http) pour éviter une boucle d'intercepteurs
   const { data } = await axios.post<{
     accessToken: string;
     refreshToken?: string;
-  }>(
-    `${import.meta.env.VITE_API_BASE_URL}/v1.0/auth/refresh`,
-    { refreshToken },
-    { headers: { "Content-Type": "application/json" } },
-  );
+  }>(`/v1.0/auth/refresh`, null, {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${refreshToken}`,
+    },
+  });
 
   setToken(data.accessToken);
   if (data.refreshToken) setRefreshToken(data.refreshToken);
   return data.accessToken;
 }
 
-// Intercepteur de réponse : tente un refresh sur 401 avant de rediriger
+// Intercepteur de réponse : fallback sur 401 inattendu (ex. révocation côté serveur)
 http.interceptors.response.use(
   (response: AxiosResponse) => response,
   async (error: AxiosError) => {
@@ -116,42 +128,25 @@ http.interceptors.response.use(
       _retry?: boolean;
     };
 
-    const status = error.response?.status;
-    const is401 = status === 401;
-    const is403Expired = status === 403 && isTokenExpired();
-
-    if ((!is401 && !is403Expired) || originalRequest._retry) {
+    if (
+      error.response?.status !== 401 ||
+      originalRequest._retry ||
+      !getRefreshToken()
+    ) {
       return Promise.reject(error);
     }
 
-    if (isRefreshing) {
-      // Mettre la requête en file d'attente pendant le refresh en cours
-      return new Promise<AxiosResponse>((resolve, reject) => {
-        failedQueue.push({
-          resolve: token => {
-            originalRequest.headers.set("Authorization", `Bearer ${token}`);
-            resolve(http(originalRequest));
-          },
-          reject,
-        });
-      });
-    }
-
     originalRequest._retry = true;
-    isRefreshing = true;
 
     try {
-      const newToken = await attemptRefresh();
-      processQueue(null, newToken);
+      await getRefreshPromise();
+      const newToken = getToken()!;
       originalRequest.headers.set("Authorization", `Bearer ${newToken}`);
       return http(originalRequest);
-    } catch (refreshError) {
-      processQueue(refreshError, null);
+    } catch {
       clearSession();
-      window.location.href = "/";
-      return Promise.reject(refreshError);
-    } finally {
-      isRefreshing = false;
+      window.location.href = "/login";
+      return Promise.reject(error);
     }
   },
 );
