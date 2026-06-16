@@ -2,7 +2,6 @@
 import Avatar from 'primevue/avatar';
 import { generateInitials } from '@/utils/initialsGenerator';
 import { ref, watch } from 'vue';
-import { getFullImageUrl } from "@/utils/imageUrlManager";
 
 const props = defineProps<{
 	shape?: "square" | "circle" | "diamond";
