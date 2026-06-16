@@ -11,6 +11,7 @@ import { useUserStore } from "@/stores/userStore";
 import AvatarBlock from "@/components/blocks/AvatarBlock.vue";
 import Dialog from 'primevue/dialog';
 import ProfileDialog from "@/presentations/profile/ProfileDialog.vue";
+import AvatarFullBlock from "@/components/blocks/AvatarFullBlock.vue";
 
 
 const { isDark } = useTheme();
@@ -36,12 +37,14 @@ const user = computed(() => {
 		return {
 			name: '',
 			email: '',
+			image: undefined as string | undefined,
 		};
 	}
 
 	return {
 		name: userStore.fullName,
 		email: userStore.profile.email,
+		image: userStore.profile.avatarUrl ?? undefined,
 	};
 });
 
@@ -99,8 +102,7 @@ const toggle = (event: Event) => {
 						style: 'width: fit-content; display: flex; align-items: center; gap: 0.5rem; font-size: 18px; font-weight: 600;',
 					}
 				}">
-					<AvatarBlock :userFullname="user.name" shape="circle" />
-					{{ user.name }}
+					<AvatarFullBlock :user="user" shape="circle" size="small" isHeader />
 					<i class="pi pi-angle-down"></i>
 				</Button>
 				<Menu :model="items" popup ref="menu">

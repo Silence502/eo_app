@@ -15,6 +15,9 @@ import { useFormDirty } from "@/utils/formDirty";
 import { ref, onMounted, computed, provide } from "vue";
 import Badge from 'primevue/badge';
 import { UserProfileFormSchema } from "@/schemas/User";
+import { uploadAvatar } from "@/api/auth";
+import { useUserStore } from "@/stores/userStore";
+import { useToast } from "primevue/usetoast";
 
 const props = withDefaults(
 	defineProps<{
@@ -22,6 +25,7 @@ const props = withDefaults(
 		user: {
 			name: string;
 			email: string;
+			image?: string;
 		};
 	}>(),
 	{
@@ -34,11 +38,12 @@ const props = withDefaults(
 );
 
 const formRef = ref<InstanceType<typeof Form> | null>(null);
+const avatarComponent = ref<InstanceType<typeof AvatarFullBlock> | null>(null);
 const isDirty = useFormDirty(formRef);
 const isUserFieldDirty = ref(false);
 const isBusinessFieldDirty = ref(false);
 
-const { t, isDark, resolver, initialValues, isLoading, errorMessage, onSubmit, resetForm } = useProfileForm(formRef);
+const { t, isDark, resolver, initialValues, isLoading, errorMessage, onSubmit, resetForm, onAvatarChange, isUploadingAvatar, isAvatarChanged } = useProfileForm(formRef, avatarComponent);
 
 function handleUserFieldDirty(value: boolean) {
 	isUserFieldDirty.value = value;
@@ -54,7 +59,8 @@ provide('formSchema', UserProfileFormSchema);
 <template>
 	<div class="flex flex-col items-center gap-4 p-4">
 		<div class="w-full flex items-center justify-start">
-			<AvatarFullBlock :user="user" shape="circle" size="large" />
+			<AvatarFullBlock ref="avatarComponent" :user="user" shape="circle" size="large" editable
+				:uploading="isUploadingAvatar" @avatarChange="onAvatarChange" />
 		</div>
 
 		<Tabs value="profile" class="w-full">
@@ -80,34 +86,35 @@ provide('formSchema', UserProfileFormSchema);
 				<!-- PROFILE TAB -->
 				<Form ref="formRef" :resolver="resolver" :initial-values="initialValues" @submit="onSubmit"
 					v-slot="$form">
+					<!-- <InputText type="hidden" name="avatarUrl" :value="file ? file.name : initialValues.avatarUrl" /> -->
 					<TabPanel value="profile">
 						<div class="w-full flex flex-col gap-4">
 							<div class="grid grid-cols-2 gap-4 w-full">
-								<FieldBlock @isdirty="handleUserFieldDirty" id="firstName" name="firstName"
+								<FieldBlock @isdirty="handleUserFieldDirty" id="firstName" name="firstName" badge
 									:label="$t('auth.firstName')" type="text" />
-								<FieldBlock @isdirty="handleUserFieldDirty" id="lastName" name="lastName"
+								<FieldBlock @isdirty="handleUserFieldDirty" id="lastName" name="lastName" badge
 									:label="$t('auth.lastName')" type="text" />
 							</div>
 							<div class="grid grid-cols-2 gap-4 w-full">
-								<FieldBlock @isdirty="handleUserFieldDirty" id="email" name="email"
+								<FieldBlock @isdirty="handleUserFieldDirty" id="email" name="email" badge
 									:label="$t('auth.email')" type="text" />
-								<FieldBlock @isdirty="handleUserFieldDirty" id="phone" name="phone"
+								<FieldBlock @isdirty="handleUserFieldDirty" id="phone" name="phone" badge
 									:label="$t('auth.phone')" type="text" />
 							</div>
 							<Divider />
-							<FieldBlock @isdirty="handleUserFieldDirty" id="address.street" name="address.street"
+							<FieldBlock @isdirty="handleUserFieldDirty" id="address.street" name="address.street" badge
 								:label="$t('auth.address')" type="text" />
 							<FieldBlock @isdirty="handleUserFieldDirty" id="address.otherStreet"
-								name="address.otherStreet" :label="$t('auth.addressOther')" type="text" />
+								name="address.otherStreet" badge :label="$t('auth.addressOther')" type="text" />
 							<div class="grid grid-cols-2 gap-4 w-full">
-								<FieldBlock @isdirty="handleUserFieldDirty" id="address.city" name="address.city"
+								<FieldBlock @isdirty="handleUserFieldDirty" id="address.city" name="address.city" badge
 									:label="$t('auth.city')" type="text" />
-								<FieldBlock @isdirty="handleUserFieldDirty" id="address.zip" name="address.zip"
+								<FieldBlock @isdirty="handleUserFieldDirty" id="address.zip" name="address.zip" badge
 									:label="$t('auth.zip')" type="text" />
 								<FieldBlock @isdirty="handleUserFieldDirty" id="address.state" name="address.state"
-									:label="$t('auth.state')" type="text" />
+									badge :label="$t('auth.state')" type="text" />
 								<FieldBlock @isdirty="handleUserFieldDirty" id="address.country" name="address.country"
-									:label="$t('auth.country')" type="text" />
+									badge :label="$t('auth.country')" type="text" />
 
 							</div>
 						</div>
@@ -117,36 +124,40 @@ provide('formSchema', UserProfileFormSchema);
 					<TabPanel value="business">
 						<div class="w-full flex flex-col gap-4">
 							<FieldBlock @isdirty="handleBusinessFieldDirty" id="business.name" name="business.name"
-								:label="$t('profile.businessName')" type="text" />
+								badge :label="$t('profile.businessName')" type="text" />
 							<div class="grid grid-cols-2 gap-4 w-full">
 								<FieldBlock @isdirty="handleBusinessFieldDirty" id="business.email"
-									name="business.email" :label="$t('profile.businessEmail')" type="text" />
+									name="business.email" badge :label="$t('profile.businessEmail')" type="text" />
 								<FieldBlock @isdirty="handleBusinessFieldDirty" id="business.phone"
-									name="business.phone" :label="$t('profile.businessPhone')" type="text" />
+									name="business.phone" badge :label="$t('profile.businessPhone')" type="text" />
 							</div>
 
 							<div class="grid grid-cols-2 gap-4 w-full">
 								<!-- <FieldBlock id="business.siret" name="business.siret" label="SIRET" type="text" /> -->
 								<FieldBlock @isdirty="handleBusinessFieldDirty" id="business.vatNumber"
-									name="business.vatNumber" :label="$t('profile.businessVatNumber')" type="text" />
+									name="business.vatNumber" badge :label="$t('profile.businessVatNumber')"
+									type="text" />
 								<FieldBlock @isdirty="handleBusinessFieldDirty" id="business.website"
-									name="business.website" :label="$t('profile.businessWebsite')" type="text" />
+									name="business.website" badge :label="$t('profile.businessWebsite')" type="text" />
 							</div>
 							<Divider />
 							<FieldBlock @isdirty="handleBusinessFieldDirty" id="business.address.street"
-								name="business.address.street" :label="$t('profile.businessAddress')" type="text" />
+								name="business.address.street" badge :label="$t('profile.businessAddress')"
+								type="text" />
 							<FieldBlock @isdirty="handleBusinessFieldDirty" id="business.address.otherStreet"
-								name="business.address.otherStreet" :label="$t('profile.businessAddressOther')"
+								name="business.address.otherStreet" badge :label="$t('profile.businessAddressOther')"
 								type="text" />
 							<div class="grid grid-cols-2 gap-4 w-full">
 								<FieldBlock @isdirty="handleBusinessFieldDirty" id="business.address.city"
-									name="business.address.city" :label="$t('profile.businessCity')" type="text" />
+									name="business.address.city" badge :label="$t('profile.businessCity')"
+									type="text" />
 								<FieldBlock @isdirty="handleBusinessFieldDirty" id="business.address.zip"
-									name="business.address.zip" :label="$t('profile.businessZip')" type="text" />
+									name="business.address.zip" badge :label="$t('profile.businessZip')" type="text" />
 								<FieldBlock @isdirty="handleBusinessFieldDirty" id="business.address.state"
-									name="business.address.state" :label="$t('profile.businessState')" type="text" />
+									name="business.address.state" badge :label="$t('profile.businessState')"
+									type="text" />
 								<FieldBlock @isdirty="handleBusinessFieldDirty" id="business.address.country"
-									name="business.address.country" :label="$t('profile.businessCountry')"
+									name="business.address.country" badge :label="$t('profile.businessCountry')"
 									type="text" />
 							</div>
 						</div>
@@ -158,15 +169,16 @@ provide('formSchema', UserProfileFormSchema);
 						</Message>
 						<div class="flex flex-row justify-between gap-4">
 							<div class="flex flex-row justify-start gap-4">
-								<Message v-if="isDirty" severity="warn" variant="outlined">
+								<Message v-if="isDirty || isAvatarChanged" severity="warn" variant="outlined">
 									{{ $t('common.inProgress') }}
 								</Message>
 							</div>
 							<div class="flex flex-row justify-end gap-4">
 								<Button type="button" severity="secondary" :label="$t('common.cancel')" class="w-fit"
-									:loading="isLoading" :disabled="isLoading || !isDirty" @click="resetForm" />
+									:loading="isLoading" :disabled="isLoading || (!isDirty && !isAvatarChanged)"
+									@click="resetForm" />
 								<Button type="submit" :label="$t('common.save')" class="w-fit" :loading="isLoading"
-									:disabled="isLoading || !isDirty || !$form.valid" />
+									:disabled="isLoading || !$form.valid || (!isDirty && !isAvatarChanged)" />
 							</div>
 						</div>
 					</div>

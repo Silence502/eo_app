@@ -34,6 +34,7 @@ export const UserProfileSchema = z.object({
   phone: z.string().nullable(),
   role: z.enum(["USER", "ADMIN"]),
   plan: z.enum(["free", "pro", "enterprise"]),
+  avatarUrl: z.string().nullable(),
   address: AddressSchema.nullable().optional(),
   business: BusinessSchema.nullable().optional(),
   createdAt: z.date().readonly(),
@@ -51,6 +52,7 @@ export const UserProfileFormSchema = z.object({
     .min(2, { error: () => ({ message: "validation.required" }) }),
   email: z.email({ error: () => ({ message: "validation.emailInvalid" }) }),
   phone: z.string().nullable(),
+  avatarUrl: z.string().nullable().optional(),
   address: AddressSchema.nullable().optional(),
   business: BusinessSchema.nullable().optional(),
 });
@@ -72,6 +74,7 @@ export const UserSchema = z.object({
     .min(8, { error: () => ({ message: "validation.passwordMin" }) }),
   role: z.enum(["USER", "ADMIN"]).default("USER"),
   plan: z.enum(["free", "pro", "enterprise"]).default("free"),
+  avatarUrl: z.string().nullable(),
   hashedRefreshToken: z.string().optional(),
   createdAt: z.date().readonly(),
   updatedAt: z.date().readonly(),

@@ -9,17 +9,25 @@ import {
   type UserProfile,
 } from "@/schemas/User";
 import { useUserStore } from "@/stores/userStore";
-import { updateProfile } from "@/api/auth";
+import { updateProfile, uploadAvatar } from "@/api/auth";
 import { useToast } from "primevue/usetoast";
 
-export function useProfileForm(formRef: Ref<InstanceType<typeof Form> | null>) {
+export function useProfileForm(
+  formRef: Ref<InstanceType<typeof Form> | null>,
+  avatarComponent: Ref<InstanceType<
+    typeof import("@/components/blocks/AvatarFullBlock.vue").default
+  > | null>,
+) {
   const { t } = useI18n();
   const { isDark } = useTheme();
   const userStore = useUserStore();
   const toast = useToast();
 
+  const isUploadingAvatar = ref(false);
+  const isAvatarChanged = ref(false);
   const isLoading = ref(false);
   const errorMessage = ref<string | null>(null);
+  const file = ref<File | null>(null);
 
   const resolver = zodResolver(UserProfileFormSchema);
 
@@ -28,6 +36,7 @@ export function useProfileForm(formRef: Ref<InstanceType<typeof Form> | null>) {
     firstName: userStore.profile?.firstName ?? "",
     lastName: userStore.profile?.lastName ?? "",
     phone: userStore.profile?.phone ?? null,
+    avatarUrl: userStore.profile?.avatarUrl ?? null,
     address: userStore.profile?.address ?? null,
     business: userStore.profile?.business ?? null,
   }));
@@ -42,7 +51,15 @@ export function useProfileForm(formRef: Ref<InstanceType<typeof Form> | null>) {
       errorMessage.value = null;
       try {
         await updateProfile(values);
-        userStore.updateProfile(values);
+        if (file.value) {
+          isUploadingAvatar.value = true;
+          const { avatarUrl } = await uploadAvatar(file.value);
+          userStore.updateProfile({ avatarUrl });
+          isAvatarChanged.value = false;
+          file.value = null;
+          values.avatarUrl = avatarUrl;
+          isUploadingAvatar.value = false;
+        }
         await nextTick();
         toast.add({
           severity: "success",
@@ -65,9 +82,20 @@ export function useProfileForm(formRef: Ref<InstanceType<typeof Form> | null>) {
     }
   }
 
+  async function onAvatarChange(fileInput: File) {
+    file.value = fileInput;
+    isAvatarChanged.value = true;
+    await nextTick();
+  }
+
   async function resetForm() {
     (formRef.value as any)?.reset();
     errorMessage.value = null;
+    isAvatarChanged.value = false;
+    file.value = null;
+    avatarComponent.value?.resetPreview();
+
+    await nextTick();
   }
 
   return {
@@ -79,5 +107,9 @@ export function useProfileForm(formRef: Ref<InstanceType<typeof Form> | null>) {
     errorMessage,
     onSubmit,
     resetForm,
+    onAvatarChange,
+    isUploadingAvatar,
+    isAvatarChanged,
+    avatarComponent,
   };
 }

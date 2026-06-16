@@ -67,6 +67,8 @@
 		"updateSuccess": "Profile updated successfully.",
 		"updateSuccessDetail": "Your personal information has been updated successfully.",
 		"updateError": "An error occurred while updating the profile.",
+		"avatarUpdateSuccess": "Avatar updated successfully.",
+		"avatarUpdateError": "An error occurred while updating the avatar.",
 		"businessName": "Business Name",
 		"businessEmail": "Business Email",
 		"businessPhone": "Business Phone",

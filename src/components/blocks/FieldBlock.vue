@@ -12,19 +12,30 @@ import type { ZodObject, ZodTypeAny } from "zod";
 
 const { t } = useI18n();
 
-const props = defineProps<{
-	id: string;
-	name: string;
-	label: string;
-	type?: string;
-	textType?: "text" | "link";
-	placeholder?: string;
-	info?: boolean;
-	infoText?: string;
-	infoDirection?: "right" | "left";
-	disabled?: boolean;
-	schema?: ZodObject<any>;
-}>();
+const props = withDefaults(
+	defineProps<{
+		id: string;
+		name: string;
+		label: string;
+		type?: string;
+		textType?: "text" | "link";
+		placeholder?: string;
+		info?: boolean;
+		infoText?: string;
+		infoDirection?: "right" | "left";
+		disabled?: boolean;
+		schema?: ZodObject<any>;
+		badge?: boolean;
+	}>(),
+	{
+		type: 'text',
+		textType: 'link',
+		info: false,
+		infoDirection: 'right',
+		disabled: false,
+		badge: false,
+	}
+);
 
 const fieldRef = ref<InstanceType<typeof FormField> | null>(null);
 const isFieldDirty = useFieldDirty(fieldRef);
@@ -63,7 +74,7 @@ const isRequired = computed(() => {
 			<label :for="id">
 				{{ label }}
 				<span v-if="isRequired" class="text-red-500 ml-1" aria-hidden="true">*</span>
-				<Badge v-if="isFieldDirty" severity="warn" class="ml-2 w-1" />
+				<Badge v-if="isFieldDirty && badge" severity="warn" class="ml-2 w-1" />
 			</label>
 
 			<InputText v-if="type === 'text'" :id="id" :name="name" v-bind="$field" :type="type"

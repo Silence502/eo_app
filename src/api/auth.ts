@@ -61,4 +61,15 @@ export async function updateProfile(
   return data;
 }
 
+export async function uploadAvatar(file: File): Promise<{ avatarUrl: string }> {
+  const formData = new FormData();
+  formData.append("file", file);
+  const { data } = await http.post<{ avatarUrl: string }>(
+    "/v1.0/auth/profile/avatar",
+    formData,
+    { headers: { "Content-Type": "multipart/form-data" } },
+  );
+  return data;
+}
+
 export { attemptRefresh as refreshToken };

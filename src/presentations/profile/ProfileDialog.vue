@@ -13,6 +13,7 @@ const props = withDefaults(
 		user: {
 			name: string;
 			email: string;
+			image?: string;
 		};
 	}>(),
 	{
