@@ -24,9 +24,13 @@ export type Business = z.infer<typeof BusinessSchema>;
 
 export const UserProfileSchema = z.object({
   id: z.number().int(),
-  email: z.email(),
-  firstName: z.string(),
-  lastName: z.string(),
+  email: z.email({ error: () => ({ message: "validation.emailInvalid" }) }),
+  firstName: z
+    .string()
+    .min(2, { error: () => ({ message: "validation.required" }) }),
+  lastName: z
+    .string()
+    .min(2, { error: () => ({ message: "validation.required" }) }),
   phone: z.string().nullable(),
   role: z.enum(["USER", "ADMIN"]),
   plan: z.enum(["free", "pro", "enterprise"]),
@@ -39,9 +43,13 @@ export const UserProfileSchema = z.object({
 export type UserProfile = z.infer<typeof UserProfileSchema>;
 
 export const UserProfileFormSchema = z.object({
-  firstName: z.string(),
-  lastName: z.string(),
-  email: z.email(),
+  firstName: z
+    .string()
+    .min(2, { error: () => ({ message: "validation.required" }) }),
+  lastName: z
+    .string()
+    .min(2, { error: () => ({ message: "validation.required" }) }),
+  email: z.email({ error: () => ({ message: "validation.emailInvalid" }) }),
   phone: z.string().nullable(),
   address: AddressSchema.nullable().optional(),
   business: BusinessSchema.nullable().optional(),
@@ -55,10 +63,10 @@ export const UserSchema = z.object({
   phone: z.string().nullable(),
   firstName: z
     .string()
-    .min(1, { error: () => ({ message: "validation.required" }) }),
+    .min(2, { error: () => ({ message: "validation.required" }) }),
   lastName: z
     .string()
-    .min(1, { error: () => ({ message: "validation.required" }) }),
+    .min(2, { error: () => ({ message: "validation.required" }) }),
   password: z
     .string()
     .min(8, { error: () => ({ message: "validation.passwordMin" }) }),

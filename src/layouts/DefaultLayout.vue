@@ -115,8 +115,14 @@ const toggle = (event: Event) => {
 		</div>
 
 		<!-- PROFILE DIALOG -->
-		<Dialog header="Mon profil" :style="{ width: '45rem' }" v-model:visible="showProfileDialog" :modal="true"
-			:closable="true" :draggable="false">
+		<Dialog :header="$t('profile.title')" :style="{ width: '45rem' }" v-model:visible="showProfileDialog"
+			:modal="true" :closable="true" :draggable="false">
+			<template #header>
+				<div class="flex flex-col gap-1 items-start">
+					<h2 class="text-lg font-bold">{{ $t('profile.title') }}</h2>
+					<span class="text-surface-500 dark:text-surface-400 text-sm">{{ $t('profile.subtitle') }}</span>
+				</div>
+			</template>
 			<ProfileDialog :user="user" :userStore="userStore" />
 		</Dialog>
 		<!-- PROFILE DIALOG -->

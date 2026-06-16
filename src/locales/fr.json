@@ -8,7 +8,8 @@
 		"confirm": "Confirmer",
 		"back": "Retour",
 		"yes": "Oui",
-		"no": "Non"
+		"no": "Non",
+		"inProgress": "Modifications en cours..."
 	},
 	"auth": {
 		"login": "Se connecter",
@@ -20,7 +21,22 @@
 		"forgotPassword": "Mot de passe oublié ?",
 		"invalidCredentials": "Identifiants invalides.",
 		"register": "S'inscrire",
-		"noAccount": "Vous n'avez pas de compte ?"
+		"noAccount": "Vous n'avez pas de compte ?",
+		"firstName": "Prénom",
+		"lastName": "Nom de famille",
+		"confirmPassword": "Confirmer le mot de passe",
+		"acceptTerms": "J'accepte les termes et conditions.",
+		"registerTitle": "Créer un compte",
+		"termsInfo": "En créant un compte, vous acceptez nos termes et conditions.",
+		"alreadyRegistered": "Vous avez déjà un compte ?",
+		"phone": "Numéro de téléphone",
+		"address": "Adresse",
+		"city": "Ville",
+		"state": "État",
+		"zip": "Code postal",
+		"country": "Pays",
+		"addressOther": "Autre adresse",
+		"addressBilling": "Adresse de facturation"
 	},
 	"dashboard": {
 		"title": "Tableau de bord"
@@ -33,7 +49,7 @@
 		},
 		"footer": {
 			"copyright": "© 2026 Event Orchestra. Tous droits réservés.",
-			"designedBy": "Conçu par l'équipe"
+			"designedBy": "Conçu par"
 		}
 	},
 	"validation": {
@@ -42,5 +58,26 @@
 		"passwordMin": "Le mot de passe doit contenir au moins 8 caractères.",
 		"passwordConfirmMismatch": "Les mots de passe ne correspondent pas.",
 		"stringMin": "Ce champ doit contenir au moins {min} caractère(s)."
+	},
+	"profile": {
+		"title": "Mon profil",
+		"subtitle": "Gérez vos informations personnelles.",
+		"user": "Utilisateur",
+		"business": "Entreprise",
+		"updateSuccess": "Profil mis à jour avec succès.",
+		"updateSuccessDetail": "Vos informations personnelles ont été mises à jour avec succès.",
+		"updateError": "Une erreur s'est produite lors de la mise à jour du profil.",
+		"businessName ": "Nom de l'entreprise",
+		"businessEmail": "E-mail de l'entreprise",
+		"businessPhone": "Téléphone de l'entreprise",
+		"businessAddress": "Adresse de l'entreprise",
+		"businessCity": "Ville de l'entreprise",
+		"businessState": "État de l'entreprise",
+		"businessZip": "Code postal de l'entreprise",
+		"businessCountry": "Pays de l'entreprise",
+		"businessAddressOther": "Autre adresse de l'entreprise",
+		"businessAddressBilling": "Adresse de facturation de l'entreprise",
+		"businessWebsite": "Site web de l'entreprise",
+		"businessVatNumber": "Numéro de TVA de l'entreprise"
 	}
 }

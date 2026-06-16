@@ -12,8 +12,9 @@ import TabPanels from 'primevue/tabpanels';
 import TabPanel from 'primevue/tabpanel';
 import { useProfileForm } from "@/composables/useProfileForm";
 import { useFormDirty } from "@/utils/formDirty";
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, computed, provide } from "vue";
 import Badge from 'primevue/badge';
+import { UserProfileFormSchema } from "@/schemas/User";
 
 const props = withDefaults(
 	defineProps<{
@@ -47,10 +48,7 @@ function handleBusinessFieldDirty(value: boolean) {
 	isBusinessFieldDirty.value = value;
 }
 
-onMounted(() => {
-	// console.log(formRef.value); // Debug initial form states
-	// console.log("Initial isUserFieldDirty:", isUserFieldDirty.value); // Debug initial user field dirty state
-});
+provide('formSchema', UserProfileFormSchema);
 </script>
 
 <template>
@@ -59,14 +57,12 @@ onMounted(() => {
 			<AvatarFullBlock :user="user" shape="circle" size="large" />
 		</div>
 
-		<!-- {{ isDirty ? 'Formulaire modifié' : 'Formulaire non modifié' }} -->
-
 		<Tabs value="profile" class="w-full">
 			<TabList>
 				<Tab value="profile">
 					<div class="flex items-center gap-2">
 						<i class="pi pi-user"></i>
-						<span>Utilisateur</span>
+						<span>{{ $t('profile.user') }}</span>
 					</div>
 
 					<Badge v-if="isUserFieldDirty" severity="warn" class="ml-2 w-1 absolute top-2 right-2" />
@@ -74,7 +70,7 @@ onMounted(() => {
 				<Tab value="business">
 					<div class="flex items-center gap-2">
 						<i class="pi pi-building"></i>
-						<span>Entreprise</span>
+						<span>{{ $t('profile.business') }}</span>
 					</div>
 					<Badge v-if="isBusinessFieldDirty" severity="warn" class="ml-2 w-1 absolute top-2 right-2" />
 				</Tab>
@@ -88,30 +84,30 @@ onMounted(() => {
 						<div class="w-full flex flex-col gap-4">
 							<div class="grid grid-cols-2 gap-4 w-full">
 								<FieldBlock @isdirty="handleUserFieldDirty" id="firstName" name="firstName"
-									label="Prénom" type="text" />
-								<FieldBlock @isdirty="handleUserFieldDirty" id="lastName" name="lastName" label="Nom"
-									type="text" />
+									:label="$t('auth.firstName')" type="text" />
+								<FieldBlock @isdirty="handleUserFieldDirty" id="lastName" name="lastName"
+									:label="$t('auth.lastName')" type="text" />
 							</div>
 							<div class="grid grid-cols-2 gap-4 w-full">
-								<FieldBlock @isdirty="handleUserFieldDirty" id="email" name="email" label="Email"
-									type="text" />
-								<FieldBlock @isdirty="handleUserFieldDirty" id="phone" name="phone" label="Téléphone"
-									type="text" />
+								<FieldBlock @isdirty="handleUserFieldDirty" id="email" name="email"
+									:label="$t('auth.email')" type="text" />
+								<FieldBlock @isdirty="handleUserFieldDirty" id="phone" name="phone"
+									:label="$t('auth.phone')" type="text" />
 							</div>
 							<Divider />
 							<FieldBlock @isdirty="handleUserFieldDirty" id="address.street" name="address.street"
-								label="Adresse" type="text" />
+								:label="$t('auth.address')" type="text" />
 							<FieldBlock @isdirty="handleUserFieldDirty" id="address.otherStreet"
-								name="address.otherStreet" label="Complément d'adresse" type="text" />
+								name="address.otherStreet" :label="$t('auth.addressOther')" type="text" />
 							<div class="grid grid-cols-2 gap-4 w-full">
 								<FieldBlock @isdirty="handleUserFieldDirty" id="address.city" name="address.city"
-									label="Ville" type="text" />
+									:label="$t('auth.city')" type="text" />
 								<FieldBlock @isdirty="handleUserFieldDirty" id="address.zip" name="address.zip"
-									label="Code postal" type="text" />
+									:label="$t('auth.zip')" type="text" />
 								<FieldBlock @isdirty="handleUserFieldDirty" id="address.state" name="address.state"
-									label="Province / Région / État" type="text" />
+									:label="$t('auth.state')" type="text" />
 								<FieldBlock @isdirty="handleUserFieldDirty" id="address.country" name="address.country"
-									label="Pays" type="text" />
+									:label="$t('auth.country')" type="text" />
 
 							</div>
 						</div>
@@ -121,35 +117,37 @@ onMounted(() => {
 					<TabPanel value="business">
 						<div class="w-full flex flex-col gap-4">
 							<FieldBlock @isdirty="handleBusinessFieldDirty" id="business.name" name="business.name"
-								label="Nom de l'entreprise" type="text" />
+								:label="$t('profile.businessName')" type="text" />
 							<div class="grid grid-cols-2 gap-4 w-full">
 								<FieldBlock @isdirty="handleBusinessFieldDirty" id="business.email"
-									name="business.email" label="Email de l'entreprise" type="text" />
+									name="business.email" :label="$t('profile.businessEmail')" type="text" />
 								<FieldBlock @isdirty="handleBusinessFieldDirty" id="business.phone"
-									name="business.phone" label="Téléphone" type="text" />
+									name="business.phone" :label="$t('profile.businessPhone')" type="text" />
 							</div>
 
 							<div class="grid grid-cols-2 gap-4 w-full">
 								<!-- <FieldBlock id="business.siret" name="business.siret" label="SIRET" type="text" /> -->
 								<FieldBlock @isdirty="handleBusinessFieldDirty" id="business.vatNumber"
-									name="business.vatNumber" label="TVA intracommunautaire" type="text" />
+									name="business.vatNumber" :label="$t('profile.businessVatNumber')" type="text" />
 								<FieldBlock @isdirty="handleBusinessFieldDirty" id="business.website"
-									name="business.website" label="Site web" type="text" />
+									name="business.website" :label="$t('profile.businessWebsite')" type="text" />
 							</div>
 							<Divider />
 							<FieldBlock @isdirty="handleBusinessFieldDirty" id="business.address.street"
-								name="business.address.street" label="Adresse" type="text" />
+								name="business.address.street" :label="$t('profile.businessAddress')" type="text" />
 							<FieldBlock @isdirty="handleBusinessFieldDirty" id="business.address.otherStreet"
-								name="business.address.otherStreet" label="Complément d'adresse" type="text" />
+								name="business.address.otherStreet" :label="$t('profile.businessAddressOther')"
+								type="text" />
 							<div class="grid grid-cols-2 gap-4 w-full">
 								<FieldBlock @isdirty="handleBusinessFieldDirty" id="business.address.city"
-									name="business.address.city" label="Ville" type="text" />
+									name="business.address.city" :label="$t('profile.businessCity')" type="text" />
 								<FieldBlock @isdirty="handleBusinessFieldDirty" id="business.address.zip"
-									name="business.address.zip" label="Code postal" type="text" />
+									name="business.address.zip" :label="$t('profile.businessZip')" type="text" />
 								<FieldBlock @isdirty="handleBusinessFieldDirty" id="business.address.state"
-									name="business.address.state" label="Province / Région / État" type="text" />
+									name="business.address.state" :label="$t('profile.businessState')" type="text" />
 								<FieldBlock @isdirty="handleBusinessFieldDirty" id="business.address.country"
-									name="business.address.country" label="Pays" type="text" />
+									name="business.address.country" :label="$t('profile.businessCountry')"
+									type="text" />
 							</div>
 						</div>
 					</TabPanel>
@@ -160,14 +158,15 @@ onMounted(() => {
 						</Message>
 						<div class="flex flex-row justify-between gap-4">
 							<div class="flex flex-row justify-start gap-4">
-								<Message v-if="isDirty" severity="warn" variant="outlined">En cours de modification
+								<Message v-if="isDirty" severity="warn" variant="outlined">
+									{{ $t('common.inProgress') }}
 								</Message>
 							</div>
 							<div class="flex flex-row justify-end gap-4">
-								<Button type="button" severity="secondary" label="Annuler" class="w-fit"
+								<Button type="button" severity="secondary" :label="$t('common.cancel')" class="w-fit"
 									:loading="isLoading" :disabled="isLoading || !isDirty" @click="resetForm" />
-								<Button type="submit" label="Enregistrer" class="w-fit" :loading="isLoading"
-									:disabled="isLoading || !isDirty" />
+								<Button type="submit" :label="$t('common.save')" class="w-fit" :loading="isLoading"
+									:disabled="isLoading || !isDirty || !$form.valid" />
 							</div>
 						</div>
 					</div>

@@ -22,7 +22,7 @@ const props = defineProps<{
 
 <template>
 	<FormField v-slot="$field" :name="name">
-		<div class="flex flex-row gap-1">
+		<div class="flex flex-row gap-2">
 			<Checkbox :id="id" :name="name" v-bind="$field" :binary="true" class="w-full" :invalid="!$field.value" />
 			<label :for="id">
 				{{ label }}
@@ -31,11 +31,12 @@ const props = defineProps<{
 		<Message v-if="$field.invalid" severity="error" size="small" variant="simple">
 			{{ t($field.error?.message ?? '') }}
 		</Message>
-		<div v-if="info" class="flex items-center justify-start"
+
+		<div v-if="info" class="flex items-center justify-start mt-2"
 			:class="{ 'flex-row-reverse': infoDirection === 'right' }">
 			<Button v-if="textType === 'link'" :pt="{
 				root: {
-					style: 'font-size: var(--text-sm) /* 0.875rem = 14px */ !important; padding: 0 !important; margin: 0 !important;',
+					style: 'font-size: var(--text-sm) /* 0.875rem = 14px */ !important; padding: 0 !important; margin: 0 !important; text-align: left;',
 				}
 			}" :label="infoText" variant="link" />
 			<div v-else class="text-sm text-gray-400 flex items-center justify-start"
