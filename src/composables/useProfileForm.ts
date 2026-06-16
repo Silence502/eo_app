@@ -52,6 +52,7 @@ export function useProfileForm(
       try {
         await updateProfile(values);
         if (file.value) {
+          console.log("Uploading avatar...");
           isUploadingAvatar.value = true;
           const { avatarUrl } = await uploadAvatar(file.value);
           userStore.updateProfile({ avatarUrl });
@@ -60,6 +61,7 @@ export function useProfileForm(
           values.avatarUrl = avatarUrl;
           isUploadingAvatar.value = false;
         }
+        userStore.updateProfile(values);
         await nextTick();
         toast.add({
           severity: "success",

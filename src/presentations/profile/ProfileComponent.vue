@@ -15,9 +15,6 @@ import { useFormDirty } from "@/utils/formDirty";
 import { ref, onMounted, computed, provide } from "vue";
 import Badge from 'primevue/badge';
 import { UserProfileFormSchema } from "@/schemas/User";
-import { uploadAvatar } from "@/api/auth";
-import { useUserStore } from "@/stores/userStore";
-import { useToast } from "primevue/usetoast";
 
 const props = withDefaults(
 	defineProps<{
@@ -43,7 +40,17 @@ const isDirty = useFormDirty(formRef);
 const isUserFieldDirty = ref(false);
 const isBusinessFieldDirty = ref(false);
 
-const { t, isDark, resolver, initialValues, isLoading, errorMessage, onSubmit, resetForm, onAvatarChange, isUploadingAvatar, isAvatarChanged } = useProfileForm(formRef, avatarComponent);
+const {
+	resolver,
+	initialValues,
+	isLoading,
+	errorMessage,
+	onSubmit,
+	resetForm,
+	onAvatarChange,
+	isUploadingAvatar,
+	isAvatarChanged
+} = useProfileForm(formRef, avatarComponent);
 
 function handleUserFieldDirty(value: boolean) {
 	isUserFieldDirty.value = value;
@@ -86,7 +93,6 @@ provide('formSchema', UserProfileFormSchema);
 				<!-- PROFILE TAB -->
 				<Form ref="formRef" :resolver="resolver" :initial-values="initialValues" @submit="onSubmit"
 					v-slot="$form">
-					<!-- <InputText type="hidden" name="avatarUrl" :value="file ? file.name : initialValues.avatarUrl" /> -->
 					<TabPanel value="profile">
 						<div class="w-full flex flex-col gap-4">
 							<div class="grid grid-cols-2 gap-4 w-full">
