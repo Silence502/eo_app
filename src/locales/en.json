@@ -81,5 +81,17 @@
 		"businessAddressBilling": "Business Billing Address",
 		"businessWebsite": "Business Website",
 		"businessVatNumber": "Business VAT Number"
+	},
+	"settings": {
+		"title": "Settings",
+		"subtitle": "Manage your application settings.",
+		"language": "Language",
+		"theme": "Theme",
+		"notifications": "Notifications",
+		"privacy": "Privacy",
+		"account": "Account",
+		"security": "Security",
+		"saveSuccess": "Settings saved successfully.",
+		"saveError": "An error occurred while saving settings."
 	}
 }

@@ -12,6 +12,7 @@ import AvatarBlock from "@/components/blocks/AvatarBlock.vue";
 import Dialog from 'primevue/dialog';
 import ProfileDialog from "@/presentations/profile/ProfileDialog.vue";
 import AvatarFullBlock from "@/components/blocks/AvatarFullBlock.vue";
+import SettingsDialog from "@/presentations/settings/SettingsDialog.vue";
 
 
 const { isDark } = useTheme();
@@ -29,6 +30,7 @@ async function handleLogout() {
 }
 
 const showProfileDialog = ref(false);
+const showProfileSettings = ref(false);
 
 const userStore = useUserStore();
 
@@ -67,7 +69,7 @@ const items = computed(() => [
 				label: t('layout.nav.settings'),
 				icon: 'pi pi-cog',
 				command: () => {
-					router.push('/settings');
+					showProfileSettings.value = true;
 				}
 			},
 			{
@@ -128,6 +130,19 @@ const toggle = (event: Event) => {
 			<ProfileDialog :user="user" :userStore="userStore" />
 		</Dialog>
 		<!-- PROFILE DIALOG -->
+
+		<!-- SETTINGS DIALOG -->
+		<Dialog :header="$t('settings.title')" :style="{ width: '45rem' }" v-model:visible="showProfileSettings"
+			:modal="true" :closable="true" :draggable="false">
+			<template #header>
+				<div class="flex flex-col gap-1 items-start">
+					<h2 class="text-lg font-bold">{{ $t('settings.title') }}</h2>
+					<span class="text-surface-500 dark:text-surface-400 text-sm">{{ $t('settings.subtitle') }}</span>
+				</div>
+			</template>
+			<SettingsDialog />
+		</Dialog>
+		<!-- SETTINGS DIALOG -->
 	</header>
 	<main class="default-layout-main">
 		<slot />
