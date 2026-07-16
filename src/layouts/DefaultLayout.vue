@@ -8,7 +8,6 @@ import { ref, computed } from "vue";
 import { Routes } from "@/router/routes";
 import { useI18n } from "vue-i18n";
 import { useUserStore } from "@/stores/userStore";
-import AvatarBlock from "@/components/blocks/AvatarBlock.vue";
 import Dialog from 'primevue/dialog';
 import ProfileDialog from "@/presentations/profile/ProfileDialog.vue";
 import AvatarFullBlock from "@/components/blocks/AvatarFullBlock.vue";
