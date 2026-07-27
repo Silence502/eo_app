@@ -58,6 +58,7 @@
 		"passwordMin": "Le mot de passe doit contenir au moins 8 caractères.",
 		"passwordConfirmMismatch": "Les mots de passe ne correspondent pas.",
 		"stringMin": "Ce champ doit contenir au moins {min} caractère(s).",
+		"booleanInvalid": "Ce champ doit être une valeur booléenne.",
 		"formInvalid": "Veuillez corriger les champs en erreur avant d'enregistrer."
 	},
 	"profile": {
@@ -88,7 +89,9 @@
 		"subtitle": "Gérez vos préférences et configurations.",
 		"language": "Langue",
 		"theme": "Thème",
-		"notifications": "Notifications",
+		"notifications_email": "Notifications par e-mail",
+		"notifications_sms": "Notifications par SMS",
+		"timezone": "Fuseau horaire",
 		"privacy": "Confidentialité",
 		"account": "Compte",
 		"security": "Sécurité",

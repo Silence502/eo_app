@@ -58,6 +58,7 @@
 		"passwordMin": "Password must be at least 8 characters.",
 		"passwordConfirmMismatch": "Passwords do not match.",
 		"stringMin": "This field must be at least {min} character(s).",
+		"booleanInvalid": "This field must be a boolean value.",
 		"formInvalid": "Please correct the highlighted fields before saving."
 	},
 	"profile": {
@@ -88,7 +89,9 @@
 		"subtitle": "Manage your application settings.",
 		"language": "Language",
 		"theme": "Theme",
-		"notifications": "Notifications",
+		"notifications_email": "Email Notifications",
+		"notifications_sms": "SMS Notifications",
+		"timezone": "Timezone",
 		"privacy": "Privacy",
 		"account": "Account",
 		"security": "Security",

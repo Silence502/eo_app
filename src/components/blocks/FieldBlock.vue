@@ -2,6 +2,7 @@
 import { FormField } from "@primevue/forms";
 import InputText from "primevue/inputtext";
 import Password from "primevue/password";
+import Select from "primevue/select";
 import Message from "primevue/message";
 import Button from "primevue/button";
 import { ref, computed, watch, inject } from "vue";
@@ -82,14 +83,19 @@ const isRequired = computed(() => {
 			<InputText v-if="type === 'text'" :id="id" :name="name" v-bind="$field" :type="type"
 				:placeholder="placeholder" class="w-full" :invalid="$field.invalid" :required="isRequired"
 				:disabled="disabled" />
+
 			<Password v-else-if="type === 'password'" :id="id" :name="name" v-bind="$field" :placeholder="placeholder"
 				class="w-full" :invalid="$field.invalid" :feedback="false" toggle-mask fluid :required="isRequired"
 				:disabled="disabled" />
-			<!-- <Select v-else-if="type === 'select'" :id="id" :name="name" v-bind="$field" class="w-full"
-				v-model="optionsValue" :invalid="$field.invalid" :required="isRequired" :disabled="disabled" /> -->
+
+			<Select v-else-if="type === 'select'" :id="id" :name="name" v-bind="$field" :options="optionsValue"
+				:invalid="$field.invalid" :required="isRequired" :disabled="disabled" optionLabel="label"
+				optionValue="value" />
+
 			<Message v-if="$field.invalid" severity="error" size="small" variant="simple">
 				{{ t($field.error?.message ?? '') }}
 			</Message>
+
 			<div v-if="info" class="flex items-center justify-start"
 				:class="{ 'flex-row-reverse': infoDirection === 'right' }">
 				<Button v-if="textType === 'link'" :pt="{

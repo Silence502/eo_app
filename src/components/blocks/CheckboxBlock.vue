@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import Checkbox from "primevue/checkbox";
+import Badge from 'primevue/badge';
 import { FormField } from "@primevue/forms";
 import Message from "primevue/message";
 import Button from "primevue/button";
@@ -7,7 +8,7 @@ import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
 	id: string;
 	name: string;
 	label: string;
@@ -17,7 +18,15 @@ const props = defineProps<{
 	info?: boolean;
 	infoText?: string;
 	infoDirection?: "right" | "left";
-}>();
+	isFieldDirty?: boolean;
+	badge?: boolean;
+}>(), {
+	info: false,
+	infoDirection: 'right',
+	isFieldDirty: false,
+	badge: false,
+});
+
 </script>
 
 <template>
@@ -27,6 +36,7 @@ const props = defineProps<{
 			<label :for="id">
 				{{ label }}
 			</label>
+			<Badge v-if="$field.dirty && badge" severity="warn" class="ml-2 w-1" />
 		</div>
 		<Message v-if="$field.invalid" severity="error" size="small" variant="simple">
 			{{ t($field.error?.message ?? '') }}

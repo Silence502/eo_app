@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Form } from "@primevue/forms";
+import { Form, FormField } from "@primevue/forms";
 import Button from "primevue/button";
 import Message from "primevue/message";
 import Divider from 'primevue/divider';
@@ -10,6 +10,11 @@ import { ref, onMounted, computed, provide } from "vue";
 import { UserProfileFormSchema } from "@/schemas/User";
 import LanguageSwitcher from "@/components/blocks/LanguageSwitcher.vue";
 import ThemeSwitcher from "@/components/blocks/ThemeSwitcher.vue";
+import CheckboxBlock from "@/components/blocks/CheckboxBlock.vue";
+import { useI18n } from 'vue-i18n';
+import FieldBlock from "@/components/blocks/FieldBlock.vue";
+
+const { t } = useI18n();
 
 const props = withDefaults(
 	defineProps<{
@@ -23,7 +28,6 @@ const props = withDefaults(
 const formRef = ref<InstanceType<typeof Form> | null>(null);
 const isDirty = useFormDirty(formRef);
 const isSettingsFieldDirty = ref(false);
-const selectedTimezone = ref(props.userStore.settings?.timezone ?? "");
 
 const {
 	resolver,
@@ -33,10 +37,6 @@ const {
 	onSubmit,
 	resetForm,
 } = useSettingsForm(formRef);
-
-function handleSettingsFieldDirty(value: boolean) {
-	isSettingsFieldDirty.value = value;
-}
 
 const timezones = computed(() => {
 	const timezones = Intl.supportedValuesOf('timeZone');
@@ -59,11 +59,17 @@ provide('formSchema', UserProfileFormSchema);
 
 
 			<div class="grid grid-cols-2 gap-4 w-full">
-				<Select id="timezone" name="timezone" :options="timezones" optionLabel="label" optionValue="value"
-					v-model="selectedTimezone" />
+				<FieldBlock id="timezone" name="timezone" :label="t('settings.timezone')" type="select"
+					:options-value="timezones" badge />
 			</div>
 
+			<div class="flex flex-col gap-2">
+				<CheckboxBlock id="notificationsEmail" name="notificationsEmail"
+					:label="t('settings.notifications_email')" infoDirection="right" badge />
 
+				<CheckboxBlock id="notificationsSms" name="notificationsSms" :label="t('settings.notifications_sms')"
+					infoDirection="right" badge />
+			</div>
 
 			<Divider />
 		</div>
