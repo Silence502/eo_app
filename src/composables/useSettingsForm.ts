@@ -5,7 +5,6 @@ import { useI18n } from "vue-i18n";
 import { useTheme } from "@/composables/useTheme";
 import { SettingsSchema, type UserSettings } from "@/schemas/Settings";
 import { useUserStore } from "@/stores/userStore";
-import { updateProfile, uploadAvatar } from "@/api/auth";
 import { useToast } from "primevue/usetoast";
 import { updateSettings } from "@/api/settingsApi";
 
@@ -48,8 +47,9 @@ export function useSettingsForm(
     errorMessage.value = null;
 
     try {
-      await updateProfile(values as any);
-      userStore.setSettings(values); //TODO: Update the user store with the new settings
+      await updateSettings(values as any);
+      console.log("Settings updated successfully:", values);
+      userStore.setSettings(values);
       await nextTick();
       toast.add({
         severity: "success",

@@ -9,7 +9,7 @@ import App from "./App.vue";
 import router from "./router";
 import i18n from "./i18n";
 import { getToken } from "./api/http";
-import { getProfile } from "./api/auth";
+import { getProfile, getSettings } from "./api/auth";
 import { useUserStore } from "./stores/userStore";
 import ToastService from "primevue/toastservice";
 
@@ -41,7 +41,9 @@ if (getToken()) {
   try {
     const userStore = useUserStore();
     const profile = await getProfile();
+    const settings = await getSettings();
     userStore.setProfile(profile);
+    userStore.setSettings(settings);
   } catch {
     // Token invalide ou expiré : la session sera nettoyée par l'intercepteur
   }
