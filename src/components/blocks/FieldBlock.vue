@@ -26,6 +26,7 @@ const props = withDefaults(
 		disabled?: boolean;
 		schema?: ZodObject<any>;
 		badge?: boolean;
+		optionsValue?: Array<{ label: string; value: any }>;
 	}>(),
 	{
 		type: 'text',
@@ -34,6 +35,7 @@ const props = withDefaults(
 		infoDirection: 'right',
 		disabled: false,
 		badge: false,
+		optionsValue: () => [],
 	}
 );
 
@@ -83,6 +85,8 @@ const isRequired = computed(() => {
 			<Password v-else-if="type === 'password'" :id="id" :name="name" v-bind="$field" :placeholder="placeholder"
 				class="w-full" :invalid="$field.invalid" :feedback="false" toggle-mask fluid :required="isRequired"
 				:disabled="disabled" />
+			<!-- <Select v-else-if="type === 'select'" :id="id" :name="name" v-bind="$field" class="w-full"
+				v-model="optionsValue" :invalid="$field.invalid" :required="isRequired" :disabled="disabled" /> -->
 			<Message v-if="$field.invalid" severity="error" size="small" variant="simple">
 				{{ t($field.error?.message ?? '') }}
 			</Message>

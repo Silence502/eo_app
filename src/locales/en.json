@@ -57,7 +57,8 @@
 		"emailInvalid": "Invalid email address.",
 		"passwordMin": "Password must be at least 8 characters.",
 		"passwordConfirmMismatch": "Passwords do not match.",
-		"stringMin": "This field must be at least {min} character(s)."
+		"stringMin": "This field must be at least {min} character(s).",
+		"formInvalid": "Please correct the highlighted fields before saving."
 	},
 	"profile": {
 		"title": "My profile",
@@ -91,7 +92,8 @@
 		"privacy": "Privacy",
 		"account": "Account",
 		"security": "Security",
-		"saveSuccess": "Settings saved successfully.",
-		"saveError": "An error occurred while saving settings."
+		"updateSuccess": "Settings saved successfully.",
+		"updateSuccessDetail": "Your settings have been saved successfully.",
+		"updateError": "An error occurred while saving settings."
 	}
 }

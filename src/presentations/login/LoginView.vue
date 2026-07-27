@@ -2,7 +2,7 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import LoginComponent from "./LoginComponent.vue";
-import { login, getProfile } from "@/api/auth";
+import { login, getProfile, getSettings } from "@/api/auth";
 import type { Login } from "@/schemas/User";
 import { Routes } from "@/router/routes";
 import { useI18n } from 'vue-i18n'
@@ -20,6 +20,7 @@ async function handleLogin(values: Login) {
 	try {
 		await login(values);
 		userStore.setProfile(await getProfile());
+		userStore.setSettings(await getSettings());
 		router.push(Routes.Dashboard);
 	} catch {
 		errorMessage.value = t("auth.invalidCredentials");

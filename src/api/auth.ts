@@ -1,3 +1,4 @@
+import type { UserSettings } from "@/schemas/Settings";
 import http, {
   getToken,
   setToken,
@@ -41,13 +42,16 @@ export async function register(
   values: Omit<Register, "confirmPassword">,
 ): Promise<AuthResponse> {
   const { data } = await http.post<AuthResponse>("/v1.0/auth/register", values);
-  setToken(data.accessToken);
-  setRefreshToken(data.refreshToken);
   return data;
 }
 
 export async function getProfile(): Promise<PublicProfile> {
   const { data } = await http.get<PublicProfile>("/v1.0/auth/profile");
+  return data;
+}
+
+export async function getSettings(): Promise<UserSettings> {
+  const { data } = await http.get<UserSettings>("/v1.0/settings");
   return data;
 }
 

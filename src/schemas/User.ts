@@ -1,23 +1,25 @@
 import { z } from "zod";
 
+const emptyToNull = (val: unknown) => (val === "" ? null : val);
+
 export const AddressSchema = z.object({
-  street: z.string(),
+  street: z.string().nullable(),
   otherStreet: z.string().nullable(),
-  city: z.string(),
-  state: z.string(),
-  zip: z.string(),
-  country: z.string(),
+  city: z.string().nullable(),
+  state: z.string().nullable(),
+  zip: z.string().nullable(),
+  country: z.string().nullable(),
 });
 
 export type Address = z.infer<typeof AddressSchema>;
 
 export const BusinessSchema = z.object({
-  name: z.string(),
-  email: z.email(),
-  phone: z.string(),
-  website: z.url(),
-  vatNumber: z.string(),
-  address: AddressSchema,
+  name: z.string().nullable(),
+  email: z.preprocess(emptyToNull, z.email().nullable()),
+  phone: z.string().nullable(),
+  website: z.preprocess(emptyToNull, z.url().nullable()),
+  vatNumber: z.string().nullable(),
+  address: AddressSchema.nullable(),
 });
 
 export type Business = z.infer<typeof BusinessSchema>;
@@ -35,8 +37,8 @@ export const UserProfileSchema = z.object({
   role: z.enum(["USER", "ADMIN"]),
   plan: z.enum(["free", "pro", "enterprise"]),
   avatarUrl: z.string().nullable(),
-  address: AddressSchema.nullable().optional(),
-  business: BusinessSchema.nullable().optional(),
+  address: AddressSchema.nullable(),
+  business: BusinessSchema.nullable(),
   createdAt: z.date().readonly(),
   updatedAt: z.date().readonly(),
 });
@@ -52,9 +54,9 @@ export const UserProfileFormSchema = z.object({
     .min(2, { error: () => ({ message: "validation.required" }) }),
   email: z.email({ error: () => ({ message: "validation.emailInvalid" }) }),
   phone: z.string().nullable(),
-  avatarUrl: z.string().nullable().optional(),
-  address: AddressSchema.nullable().optional(),
-  business: BusinessSchema.nullable().optional(),
+  avatarUrl: z.string().nullish(),
+  address: AddressSchema.nullable(),
+  business: BusinessSchema.nullable(),
 });
 
 export type UserProfileForm = z.infer<typeof UserProfileFormSchema>;
