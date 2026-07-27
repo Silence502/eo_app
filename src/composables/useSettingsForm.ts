@@ -7,6 +7,7 @@ import { SettingsSchema, type UserSettings } from "@/schemas/Settings";
 import { useUserStore } from "@/stores/userStore";
 import { updateProfile, uploadAvatar } from "@/api/auth";
 import { useToast } from "primevue/usetoast";
+import { updateSettings } from "@/api/settingsApi";
 
 export function useSettingsForm(
   formRef: Ref<InstanceType<typeof Form> | null>,
@@ -39,13 +40,35 @@ export function useSettingsForm(
       return;
     }
 
-    await nextTick();
-    toast.add({
-      severity: "success",
-      summary: t("settings.updateSuccess"),
-      detail: t("settings.updateSuccessDetail"),
-      life: 3000,
-    });
+    const values: UserSettings = {
+      ...(event.values as UserSettings),
+    };
+
+    isLoading.value = true;
+    errorMessage.value = null;
+
+    try {
+      await updateProfile(values as any);
+      userStore.setSettings(values); //TODO: Update the user store with the new settings
+      await nextTick();
+      toast.add({
+        severity: "success",
+        summary: t("settings.updateSuccess"),
+        life: 3000,
+      });
+      resetForm();
+    } catch (error) {
+      console.error("Error updating settings:", error);
+      errorMessage.value = t("settings.updateError");
+      toast.add({
+        severity: "error",
+        summary: t("settings.updateError"),
+        detail: t("validation.formInvalid"),
+        life: 3000,
+      });
+    } finally {
+      isLoading.value = false;
+    }
   }
 
   async function resetForm() {

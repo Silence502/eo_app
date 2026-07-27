@@ -34,6 +34,12 @@ export const useUserStore = defineStore("user", () => {
     }
   }
 
+  function updateSettings(data: Partial<PublicSettings>): void {
+    if (settings.value) {
+      settings.value = { ...settings.value, ...data };
+    }
+  }
+
   return {
     profile,
     settings,
@@ -44,5 +50,6 @@ export const useUserStore = defineStore("user", () => {
     setSettings,
     clearProfile,
     updateProfile,
+    updateSettings,
   };
 });

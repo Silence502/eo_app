@@ -82,7 +82,6 @@ export function useProfileForm(
     try {
       await updateProfile(values);
       if (file.value) {
-        console.log("Uploading avatar...");
         isUploadingAvatar.value = true;
         const { avatarUrl } = await uploadAvatar(file.value);
         userStore.updateProfile({ avatarUrl });
