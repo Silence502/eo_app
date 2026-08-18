@@ -1,16 +1,21 @@
 <script setup lang="ts">
 import { useRouter } from "vue-router";
-import { logout } from "@/api/auth";
+import DashboardTemplate from "@/components/templates/DashboardTemplate.vue";
 
 const router = useRouter();
 </script>
 
 <template>
-	<div class="p-4">
-		<h1 class="text-3xl font-bold mb-4">Tableau de bord</h1>
-		<p>Bienvenue sur votre tableau de bord !</p>
-	</div>
-
+	<section class="px-80 h-full">
+		<DashboardTemplate>
+			<template #right>
+				<p>Dashboard right content</p>
+			</template>
+			<template #details>
+				<p>Dashboard details content</p>
+			</template>
+		</DashboardTemplate>
+	</section>
 </template>
 
 <style scoped></style>

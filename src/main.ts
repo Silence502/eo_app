@@ -28,6 +28,7 @@ app.use(PrimeVue, {
       darkModeSelector: ".eo-dark",
     },
   },
+  licenseKey: import.meta.env.VITE_PRIMELICENSE_KEY,
 });
 
 // Restore saved theme preference

@@ -124,3 +124,22 @@ h2 {
 		@apply flex gap-2 text-sm;
 	}
 }
+
+/* DASHBOARD LAYOUT */
+
+.dashboard {
+	display: grid;
+	grid-template-columns: 380px 2fr;
+	overflow: hidden;
+	height: 100%;
+	padding: 6px 0;
+	gap: 6px;
+
+	.dashboard_right {
+		@apply overflow-y-auto;
+	}
+
+	.dashboard_details {
+		@apply overflow-y-auto;
+	}
+}
