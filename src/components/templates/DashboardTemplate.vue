@@ -5,8 +5,8 @@ import Panel from 'primevue/panel';
 <template>
 	<div class="dashboard">
 		<!-- TODO: Boucler sur le nombre d'events et afficher un panel par event -->
-		<Panel class="dashboard_right" header="Dashboard Right">
-			<slot name="right"></slot>
+		<Panel class="dashboard_left" header="Dashboard left">
+			<slot name="left"></slot>
 		</Panel>
 
 		<!-- TODO: Afficher le détail de l'event sélectionné dans un panel à droite -->

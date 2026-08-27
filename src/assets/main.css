@@ -133,9 +133,11 @@ h2 {
 	overflow: hidden;
 	height: 100%;
 	padding: 6px 0;
+	width: 1200px;
+	/* justify-content: center; */
 	gap: 6px;
 
-	.dashboard_right {
+	.dashboard_left {
 		@apply overflow-y-auto;
 	}
 

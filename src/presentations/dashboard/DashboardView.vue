@@ -6,10 +6,10 @@ const router = useRouter();
 </script>
 
 <template>
-	<section class="px-80 h-full">
+	<section class="flex flex-col items-center h-full">
 		<DashboardTemplate>
-			<template #right>
-				<p>Dashboard right content</p>
+			<template #left>
+				<p>Dashboard left content</p>
 			</template>
 			<template #details>
 				<p>Dashboard details content</p>
