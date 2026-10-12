@@ -129,12 +129,12 @@ h2 {
 
 .dashboard {
 	display: grid;
-	grid-template-columns: 380px 2fr;
+	grid-template-columns: 450px 2fr;
 	overflow: hidden;
 	height: 100%;
 	padding: 6px 0;
-	width: 1200px;
-	/* justify-content: center; */
+	max-width: 1400px;
+	width: 1400px;
 	gap: 6px;
 
 	.dashboard_left {
